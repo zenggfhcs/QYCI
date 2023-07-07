@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="content" data-th-fragment="content">
+  <div class="list">
+    <ul>
+      <li data-th-each="teach : ${teaches}">
+        <div class="item-box">
+          <div class="item-main">
+            <a style="display: flex" data-th-href="'/user/vs/vs-content/' + ${teach.id}" target="_blank">
+              <img data-th-src="${teach.cover}" alt="1" src="">
+              <div class="item-info">
+                <div class="item-title">
+                  <span data-th-text="${teach.title}"></span>
+                </div>
+                <div class="item-describe">
+                  <span data-th-utext="${teach.synopsis}"></span>
+                </div>
+              </div>
+            </a>
+            <div class="item-operate">
+              <button data-th-onclick="'mgt_delete('+${teach.id}+')'">删除</button>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

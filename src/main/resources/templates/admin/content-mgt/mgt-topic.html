@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="content" data-th-fragment="content">
+  <div class="list">
+    <ul>
+      <li data-th-each="topic : ${topics}">
+        <div class="item-box">
+          <div class="item-main">
+            <a style="display: flex" data-th-href="'/user/com/topic-content/' + ${topic.id}"
+               target="_blank">
+              <div class="item-info" style="width: 40rem; margin-left: .5rem">
+                <div class="item-title" style="width: 38rem">
+                  <span data-th-text="${topic.title}"></span>
+                </div>
+                <div class="item-describe" style="width: 40rem">
+                  <span data-th-utext="${topic.content}"></span>
+                </div>
+              </div>
+            </a>
+            <div class="item-operate">
+              <button data-th-onclick="'mgt_delete('+${topic.id}+')'">删除</button>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
