@@ -1,0 +1,71 @@
+
+/* 发布入口 */
+
+#publish-box {
+    float: right;
+    width: 4vw;
+    height: 3vh;
+    line-height: 3vh;
+    margin: 3vh 1vw 0 0;
+    overflow: hidden;
+    text-align: center;
+    border: 1px deepskyblue solid;
+    transition: all 0.5s;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+#publish-box:hover {
+    height: 12vh;
+    transition: all 0.5s;
+}
+
+.publish-tip-box {
+}
+
+.publish-item {
+    display: flex;
+    width: 4vw;
+    height: 3vh;
+    line-height: 3vh;
+    color: deepskyblue;
+}
+
+.publish-item img {
+    text-align: center;
+    width: 20px;
+    height: 20px;
+}
+
+.publish-item p {
+    padding: 0;
+    margin: 0;
+}
+
+.publish-item:hover {
+    cursor: pointer;
+    background-color: deepskyblue;
+    color: white;
+}
+
+.img-box {
+    margin: auto 3px;
+}
+
+.item-default {
+    line-height: 3vh;
+    display: block;
+}
+
+.item-selected {
+    line-height: 3vh;
+    display: none;
+}
+
+.publish-item:hover .item-default {
+    display: none;
+}
+
+.publish-item:hover .item-selected {
+    display: block;
+}

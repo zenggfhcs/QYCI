@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.CompTeachCommentDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.CompTeachComment">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="teach" jdbcType="INTEGER" property="teach"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="topping" jdbcType="BIT" property="topping"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <association property="to" javaType="com.qyci.entity.User" select="selectUserByKey" column="to">
+        </association>
+        <association property="from" javaType="com.qyci.entity.User" select="selectUserByKey" column="from">
+        </association>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.qyci.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="role" jdbcType="TINYINT" property="role" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="OTHER" property="sex" />
+        <result column="age" jdbcType="TINYINT" property="age" />
+        <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+        <result column="birthday" jdbcType="DATE" property="birthday" />
+        <result column="personal_introduction" jdbcType="VARCHAR" property="personalIntroduction" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`, `teach`, `from`, `to`, `content`, `like_count`, `topping`, `publish_time`, `topping`, `visible`
+    </sql>
+    <insert id="insert">
+        insert into comp_teach_comment(`teach`, `from`, `to`, `content`, `like_count`, `topping`, `publish_time`, `visible`)
+        values (#{teach}, #{from.id}, #{to.id}, #{content}, '0', B'0', now(), B'1')
+    </insert>
+    <update id="updateByKey">
+        update comp_teach_comment
+        set
+            visible = 0
+        where id =#{id}
+    </update>
+    <update id="updateByComment">
+        update comp_teach_comment
+        set visible = 0
+        where id = #{id}
+    </update>
+    <update id="updateById">
+        update comp_teach_comment
+        set visible = 0
+        where teach = #{id}
+    </update>
+    <select id="selectUserByKey" resultMap="UserResultMap">
+        select
+            `id`, `password`, `role`, email, `name`, `sex`, `age`, `head_image`, `birthday`, `personal_introduction`
+        from user
+        where id = #{key}
+    </select>
+    <select id="selectByTeachKey" resultMap="BaseResultMap">
+        select comp_teach_comment.id,
+               `teach`,
+               `from`,
+               `to`,
+               `content`,
+               `like_count`,
+               `topping`,
+               `visible`,
+               `publish_time`
+        from comp_teach_comment
+        where comp_teach_comment.`teach` = #{key}
+          and visible = 1
+        order by publish_time desc
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *
+        from comp_teach_comment
+        where visible = 1
+    </select>
+
+</mapper>

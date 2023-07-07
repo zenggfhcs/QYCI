@@ -1,0 +1,63 @@
+#author-info-box {
+    position: fixed;
+    top: 5rem;
+    left: 10vw;
+    width: 16rem;
+    height: 21rem;
+    background-color: #506d6d;
+    border-radius: .5rem;
+}
+
+div#author-info-box {
+}
+
+#author-cover {
+    display: block;
+    width: 6rem;
+    height: 6rem;
+    background: #244d4d;
+    margin: 1rem auto .5rem;
+    border-radius: 50%;
+}
+
+#author-name {
+    height: 2rem;
+}
+
+#author-name span {
+    display: inline-block;
+    width: 16rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    line-height: 2rem;
+}
+
+#author-id {
+}
+
+#author-id span {
+}
+
+#author-describe {
+}
+
+#author-describe span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    word-break: break-all;
+    word-wrap: break-word;
+    padding: .5rem;
+}
+
+.text-box {
+    color: #244d4d;
+    text-align: center;
+    line-height: 2rem;
+    overflow: hidden;
+    width: 16rem;
+}

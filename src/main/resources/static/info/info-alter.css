@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    background-color: #244d4d;
+}
+
+#main {
+    width: 26rem;
+    height: 42rem;
+    background-color: #506d6d;
+    margin: 5rem auto 0;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+
+#headImage-box {
+    width: 10rem;
+    height: 10rem;
+    background-color: wheat;
+    border-radius: 50%;
+    position: relative;
+    margin: 0 auto;
+}
+
+#headImage-box img {
+    /* float: left; */
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+}
+
+#headImage-box input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    /* margin: 0 auto; */
+}
+
+#info {
+    color: white;
+    font-size: 1.2rem;
+    line-height: 3rem;
+    /* margin-left: 1rem; */
+    width: 17rem;
+    margin: 0 auto;
+}
+
+#info tr {
+    margin: 1rem 0 0;
+}
+
+#name {
+    border: 1px solid #244d4d;
+    border-width: 0 0 1px 0;
+    background: none;
+    height: 2rem;
+    width: 11rem;
+    padding: 0 .5rem;
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    outline: none;
+}
+
+#name::selection {
+    border: 0;
+}
+
+#sex {
+    /* width: 12rem; */
+    height: 2rem;
+    text-align: center;
+    background: none;
+    border: 1px solid #244d4d;
+    width: 12rem;
+    color: white;
+}
+
+#date {
+    background: none;
+    border: 0;
+    color: white;
+    width: 12rem;
+    font-size: 1.5rem;
+    height: 2rem;
+    padding: 0;
+    text-align: center;
+}
+
+#describe {
+
+    /* border: 0; */
+
+    /* padding: 0; */
+
+    background: none;
+
+    resize: none;
+
+    border-style: solid;
+
+    border-color: #244d4d;
+
+    border-width: 1px 0 0 1px;
+
+    padding: 1rem;
+
+    font-size: 1.2rem;
+
+    width: 15rem;
+
+    color: white;
+
+    height: 10rem;
+
+    /* margin: 0 auto; */
+
+    display: block;
+
+    margin: 0 auto;
+
+    outline: none;
+}
+
+#alter {
+
+    font-size: 1.5rem;
+
+    width: 6rem;
+
+    height: 2rem;
+
+    border: 0;
+
+    margin: 2rem 10.5rem;
+
+    border-radius: .5rem;
+}
+
+#alter:hover {
+    background-color: #ff7159;
+    color: #244d4d;
+}

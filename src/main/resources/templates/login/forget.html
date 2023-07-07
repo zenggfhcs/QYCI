@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>重置密码</title>
+    <link rel="icon" href="http://10.3.109.11/forget-icon.png" sizes="16x16">
+    <link rel="stylesheet" type="text/css" data-th-href="@{/forget-register.css}">
+    <link rel="stylesheet" type="text/css" data-th-href="@{/login-index.css}">
+    <style>
+        .input-group {
+            height: 5vh;
+        }
+    </style>
+</head>
+<body onload="init()">
+<div class="back" id="back">
+    <div class="main-l">
+        <div class="main-s">
+            <div id="mask-l">
+                <div id="mask-s">
+                    <div id="register-back">
+                        <div id="register-top">
+                            <h1 class="card-title">Retrieve password</h1>
+                        </div>
+                        <!-- 放图标 -->
+                        <div id="icon">
+                            <a data-th-href="@{~/user/index}">
+                                <img src="http://10.3.109.11/logo-l.png" id="logo" alt="logo">
+                            </a>
+                        </div>
+                        <form data-th-object="${user}" id="login-content" name="register" method="post" action="#"
+                              onsubmit="return false">
+                            <table>
+                                <tbody>
+                                <tr class="input-group">
+                                    <td class="icon"><img src="http://10.3.109.11/user-name.png"
+                                                          class="input-icon" alt="icon">
+                                    </td>
+                                    <td class="input-content">
+                                        <div class="id-input">
+                                            <input type="email" required id="email">
+                                            <label for="email">邮箱</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div id="code-box" style="display: none">
+                                <table>
+                                    <tbody>
+                                    <tr class="input-group">
+                                        <td class="icon">
+                                            <img src="http://10.3.109.11/user-name.png" class="input-icon" alt="icon">
+                                        </td>
+                                        <td class="input-content">
+                                            <div class="id-input">
+                                                <input type="text" required id="code" >
+                                                <label for="code">验证码</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="password-box" style="display: none">
+                                <table>
+                                    <tbody>
+                                    <tr class="input-group">
+                                        <td class="icon"><img src="http://10.3.109.11/user-pswd.png"
+                                                              class="input-icon" alt="icon">
+                                        </td>
+                                        <td class="input-content">
+                                            <div class="password-box">
+                                                <input type="password" required data-th-field="*{password}"
+                                                       id="password">
+                                                <label for="password">密码</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="input-group">
+                                        <td class="icon"><img src="http://10.3.109.11/user-pswd.png"
+                                                              class="input-icon" alt="icon">
+                                        </td>
+                                        <td class="input-content">
+                                            <div class="password-box">
+                                                <input type="password" required id="re-password">
+                                                <label for="re-password">再次输入密码</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="register-box">
+                                <input type="submit" value="get code" id="register" class="submit">
+                            </div>
+                        </form>
+                        <div class="other-choose">
+                            <a data-th-href="@{~/login/index}" style="margin-left: 5px; float: left" class="choose">Existing
+                                account?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script data-th-src="@{/tool.js}"></script>
+<script type="text/javascript">
+    let condition = 0
+    let effective = true
+    let accept = true
+
+    function init() {
+    }
+
+    const code = $("#code")
+    const password = $("#password")
+    const re_password = $("#re-password")
+
+    const email = $('#email')
+    email.change(() => {
+        console.log('change')
+        condition = -1
+        set_condition()
+    })
+
+    const submit = $("#register")
+    submit.click(() => {
+        if (!accept) {
+            return
+        }
+        accept = false
+        setTimeout(() => {
+            accept = true
+        }, 1000)
+        set_condition()
+
+    })
+
+    function set_condition() {
+        switch (condition) {
+            case 0: {
+                if (email.val() === '' || !(/^([a-z0-9A-Z]+[_|.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(_[a-z0-9A-Z]+)?\.)+[a-zA-Z]{2,}$/.test(email.val())))
+                    return;
+                const value = search();
+                console.log('value', value)
+                switch (value) {
+                    case 1: {
+                        break
+                    }
+                    case 0: {
+                        alert('该邮箱未注册')
+                        return
+                    }
+                    case -1: {
+                        alert('邮箱异常')
+                        break
+                    }
+                    default : {
+                        return
+                    }
+                }
+                // 发送邮件
+                sead_email(email.val())
+                effective = true
+                setTimeout(() => {
+                    effective = false
+                }, 120000)
+                alert("为了进一步确认您的身份，验证码已发送至您的邮箱")
+                //
+                submit.val('check code')
+                $("#code-box").css({
+                    'display': 'block'
+                })
+
+                condition = condition + 1
+                break
+            }
+            case 1: {
+                if (!effective) {
+                    alert('验证码已过期，已为您自动重新发送')
+                    sead_email(email.val())
+                    $("#code-box").css({
+                        'display': 'display'
+                    })
+                    $("#password-box").css({
+                        'display': 'none'
+                    })
+                    effective = true
+                    setTimeout(() => {
+                        effective = false
+                    }, 120000)
+                    return
+                }
+                if (code.val().length < 7 || code.val().length > 10) {
+                    alert('验证码长度错误')
+                    return
+                }
+                check()
+                break
+            }
+            case 2: {
+                // 提交更改
+                if (password.val() !== re_password.val()) {
+                    alert('两次输入密码不一致')
+                    re_password.focus()
+                    return
+                }
+                update()
+                break
+            }
+            default : {
+                $("#code-box").css({
+                    'display': 'none'
+                })
+                $("#password-box").css({
+                    'display': 'none'
+                })
+                submit.val('get code')
+                condition = 0
+            }
+        }
+    }
+
+    function search() {
+        const user = {
+            email: email.val()
+        }
+        let result = 0;
+        $.ajax({
+            url: '/login/forget/search',
+            type: 'POST',
+            data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: false,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: (res) => {
+                console.log('res', res)
+                result = res
+            },
+            error: (err) => {
+                console.log('err', err)
+                result = 0
+            }
+        })
+        return result
+    }
+
+    function update() {
+        const value = search();
+        console.log('value', value)
+        switch (value) {
+            case 1: {
+                break
+            }
+            case 0: {
+                alert('该邮箱未注册')
+                return
+            }
+            case -1: {
+                alert('邮箱异常')
+                break
+            }
+            default : {
+                return
+            }
+        }
+        const user = {
+            email: email.val(),
+            password: password.val()
+        }
+        console.log(user)
+        $.ajax({
+            url: '/login/forget/update',
+            type: 'POST',
+            data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: (res) => {
+                console.log('res', res)
+                switch (res) {
+                    case 17: {
+                        alert("重置成功，确定后该页面自动关闭，请返回页面后刷新")
+                        // window.location.href = '/user/index'
+                        window.close()
+                        break
+                    }
+                    case 7: {
+                        alert("重置成功，确定之后自动登录")
+                        window.location.href = '/admin/index'
+                        break
+                    }
+                    case 0: {
+                        alert("账号异常")
+                        break
+                    }
+                    default : {
+                        alert("账号异常错误")
+                    }
+                }
+            },
+            error: (err) => {
+                console.log('err', err)
+
+            }
+        })
+    }
+
+    function check() {
+        // 检查验证码
+        const cdt = {
+            check: code.val()
+        }
+        $.ajax({
+            url: '/login/forget/checking',
+            type: 'POST',
+            data: JSON.stringify(cdt), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: (res) => {
+                console.log('res', res)
+                switch (res) {
+                    case 1: {
+                        // 显示
+                        // 通过
+                        $("#code-box").css({
+                            'display': 'none'
+                        })
+                        $("#password-box").css({
+                            'display': 'block'
+                        })
+
+                        submit.val('update')
+                        condition = condition + 1
+                        break
+                    }
+                    case 0: {
+                        alert("验证码错误")
+                        break
+                    }
+                    default : {
+                        alert("验证码异常")
+                    }
+                }
+            },
+            error: (err) => {
+                console.log('err', err)
+
+            }
+        })
+    }
+    window.onunload = function () {
+        window.opener.location.reload();
+    }
+</script>
+</body>
+</html>

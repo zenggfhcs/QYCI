@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="content" data-th-fragment="content">
+    <div class="tags-box">
+        <div class="tag-item-box" data-th-each="tag : ${tags}">
+            <input type="text" maxlength="15"
+                   size="30"
+                   name="t-tags"
+                   data-th-value="${tag.name}"
+                   class="item" readonly
+                   data-th-id="'topic-tag-' + ${tag.id}"/>
+        </div>
+
+        <button id="add" onclick="add_tag('add', 'topic')">add</button>
+    </div>
+</div>
+</body>
+</html>

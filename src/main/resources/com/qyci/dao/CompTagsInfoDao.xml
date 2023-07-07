@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.CompTagsInfoDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.CompTagsInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="comp_id" jdbcType="INTEGER" property="compId"/>
+        <result column="tag_id" jdbcType="INTEGER" property="tagId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, comp_id, tag_id
+    </sql>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into comp_tags_info(comp_id, tag_id)
+        values (#{compId}, #{tagId})
+    </insert>
+    <delete id="deleteByTagId">
+        delete comp_tags_info
+        from comp_tags_info,
+             comp_tag
+        where comp_tags_info.tag_id = #{id}
+           or (comp_tag.parents = #{id} and comp_tags_info.tag_id = comp_tag.parents)
+    </delete>
+    <delete id="deleteById">
+        delete from comp_tags_info
+        where comp_id = #{id}
+    </delete>
+    <select id="selectByTag" resultType="java.lang.Integer">
+        select distinct
+        comp_id
+        from comp_tags_info,
+        comp_tag
+        <where>
+            <if test="parents!=null">
+                <if test="id!=null">
+                    and tag_id = #{id}
+                </if>
+                <if test="id==null">
+                    and tag_id = #{parents}
+                     or (comp_tag.parents = #{parents}
+                         and tag_id = comp_tag.id)
+                </if>
+            </if>
+        </where>
+    </select>
+</mapper>

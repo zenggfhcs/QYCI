@@ -1,0 +1,296 @@
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.main-box {
+}
+
+.contest-box, .activity-box {
+    width: 76vw;
+    margin: 0 auto;
+    position: relative;
+}
+
+
+.top {
+    border-bottom: 1px white solid;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.top div {
+    padding: 0.3vh 0.3vw;
+    /*border: #ffadc8 solid 1px;*/
+    border-radius: 0.1rem;
+    margin: 0 0.5vw;
+    background: none;
+    color: #909EAB;
+}
+
+.top h3 {
+    color: white;
+    font-size: 1.7rem;
+    margin: 2vh 0 0.5vh 1vh;
+}
+
+.top p {
+    margin: 0;
+    padding: 0;
+    font-size: 1.1rem;
+}
+
+.top a {
+    color: #909EAB;
+    font-size: 1.1rem;
+}
+
+.top a:hover,
+.top p:hover {
+    color: #ff7f50;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.more {
+    position: absolute;
+    font-size: 0.8rem;
+    right: 0;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+.contest {
+    width: 19vw;
+}
+
+
+.contest img {
+    opacity: 0.8;
+    margin: 1vh 1vw;
+    width: 17vw;
+    height: 25vh;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.contest img:hover {
+    margin: 0;
+    width: 19vw;
+    height: 27vh;
+    transition: all 0.2s;
+}
+
+.title {
+    width: 17vw;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+}
+
+.title, .sponsor {
+    margin-left: 1vw;
+    transition: all 0.2s;
+}
+
+.contest img:hover + .title,
+.contest img:hover + .title + .sponsor {
+    margin-left: 0;
+    transition: all 0.2s;
+}
+
+
+.title span {
+    display: inline-block;
+    width: 16.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sponsor {
+    color: #909EAB;
+    font-size: 0.8rem;
+    line-height: 1rem;
+}
+
+.sponsor span {
+    display: inline-block;
+    width: 8.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.topic-info {
+    float: right;
+    width: 58.5vw;
+    margin: 0;
+    padding-right: 1.5vw;
+}
+
+#vs-content {
+    width: 75vw;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#vs-content ul {
+    margin: 0;
+    width: 75vw;
+    float: left;
+    list-style-type: none;
+    padding: 0;
+}
+
+#vs-content li {
+    float: left;
+    width: 24vw;
+    display: inline-block;
+    margin: 0 0.5vw;
+    padding: 0;
+}
+
+.vs-item {
+    width: 24vw;
+    margin: 1vh 0;
+    background-color: #506D6D;
+    height: 17vh;
+    border-radius: 1vh;
+}
+
+.vs-info {
+    display: flex;
+    flex-direction: column;
+    width: 23vw;
+    float: left;
+    padding: 0 0.5vw;
+}
+
+.vs-title {
+    font-size: 1.5rem;
+    color: #ccc;
+    width: 22vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vs-title span {
+    margin-top: 0.5vh;
+    line-height: 4vh;
+    width: 100%;
+}
+
+.vs-info table {
+    font-size: 0.8rem;
+    color: #244d4d;
+    float: left;
+}
+
+.vs-info table tr {
+    height: 2vh;
+    line-height: 2.5vh;
+}
+
+.vs-info table td {
+    white-space: nowrap;
+    max-width: 15vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vs-info-content {
+    max-width: 12vw;
+}
+
+.reg-box {
+    margin-top: 9vh;
+    margin-right: 0.5vw;
+    float: right;
+    text-align: right;
+}
+
+.reg-box p {
+    line-height: 4vh;
+    color: #244d4d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.reg-box a {
+    text-decoration: none;
+    line-height: 2vh;
+    float: right;
+    font-size: 1rem;
+    color: #f28c8c;
+}
+
+.container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.topic-content {
+    width: 75vw;
+    margin: 0 auto;
+}
+
+.topic-content ul {
+    margin: 1vw 0 5vw;
+    padding: 0;
+    display: flex;
+    list-style-type: none;
+    width: 75vw;
+    flex-wrap: wrap;
+}
+
+.topic-content li {
+    width: 35.5vw;
+    border-radius: 0.5vh;
+    padding: 0.5vh 0.5vw;
+    margin: 0.7vh 0.5vw;
+    height: 12vh;
+    background: #506D6D;
+    display: flex;
+    flex-direction: column;
+}
+
+.topic-title {
+    color: #ccc;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 22.5vw;
+    float: left;
+    font-size: 1.7rem;
+    line-height: 3vh;
+}
+
+.topic-date {
+    color: #909EAB;
+    float: right;
+    line-height: 3vh;
+}
+
+.topic-item-content {
+    height: 9vh;
+    color: #909EAB;
+    width: 35vw;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    word-wrap: break-word;
+}
+

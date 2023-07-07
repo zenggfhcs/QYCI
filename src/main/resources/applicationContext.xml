@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="user" class="com.qyci.entity.User">
+    </bean>
+
+    <bean id="condition" class="com.qyci.entity.Condition">
+        <property name="logged" value="0" />
+    </bean>
+
+    <bean class="com.qyci.entity.TopicsTag" id="topicsTag">
+
+    </bean>
+    <bean id="compTeachTag" class="com.qyci.entity.CompTeachTag">
+
+    </bean>
+
+    <bean id="compTagInfo" class="com.qyci.entity.TopicsTagsInfo">
+
+    </bean>
+
+    <bean id="competition" class="com.qyci.entity.Competition">
+
+    </bean>
+    <bean id="compTeach" class="com.qyci.entity.CompTeach">
+
+    </bean>
+    <bean id="topics" class="com.qyci.entity.Topics">
+
+    </bean>
+    <bean id="loginState" class="com.qyci.entity.LoginState">
+
+    </bean>
+</beans>

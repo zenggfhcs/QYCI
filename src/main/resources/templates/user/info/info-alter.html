@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>启扬赛讯-个人信息</title>
+    <link rel="stylesheet" type="text/css" data-th-href="@{/info/info-alter.css}"/>
+</head>
+<body onload="init()">
+<div id="main" data-th-if="${user} != null">
+    <div id="headImage-box">
+        <img src="http://10.3.109.11/user-default-avatar.jpg" alt="1" id="show-headImage">
+        <input type="file" name="" id="head_image">
+    </div>
+    <div id="info">
+        <table>
+            <tbody>
+            <tr>
+                <td>
+                    <label for="name">昵称</label>
+                </td>
+                <td>
+                    <input type="text" id="name" onchange="upload_name()" maxlength="16" data-th-value="${user.name}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="sex">性别</label>
+                </td>
+                <td>
+                    <select id="sex">
+                        <option th:selected="${user.sex} eq '女'" >女</option>
+                        <option th:selected="${user.sex} eq '男'" >男</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="date">生日</label>
+                </td>
+                <td>
+                    <input type="date" id="date" th:value="${#dates.format(user.birthday, 'yyyy-MM-dd')}" onchange="upload_date()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>简介</label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <label for="describe"></label><textarea id="describe" onchange="upload_des()" data-th-text="${user.personalIntroduction}"></textarea>
+
+    <button id="alter" onclick="alter()">alter</button>
+</div>
+</body>
+<script data-th-src="@{/jquery.js}"></script>
+<script data-th-src="@{/tool.js}"></script>
+<script>
+    function init() {
+        if (check_login()) {
+            alert('请先登录')
+            window.open("/login/index", '_blank');
+        }
+        const cover = document.getElementById('head_image')
+        cover.addEventListener('change', upload_img)
+        const sex = document.getElementById('sex')
+        sex.addEventListener('change', upload_sex)
+    }
+
+    const info = {
+        headImage: '',
+        name: '',
+        sex: '',
+        birthday: '',
+        personalIntroduction: ''
+    }
+
+    function upload_img(event) {
+        console.log(event)
+        const file = event.target.files[0];
+        console.log(file)
+        let form = new FormData()
+        form.append("file", file)
+        info.headImage = upload(form)
+
+        let img_url = URL.createObjectURL(file);
+        document.getElementById("show-headImage").src = img_url
+    }
+
+    function upload(form) {
+        let link = ''
+        $.ajax({
+            url: "/send/comment_upload_file",
+            type: "POST",
+            data: form, // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: false,
+            // dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: false, // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                link = res.link
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+        return link
+    }
+
+    function upload_name() {
+        info.name = document.getElementById('name').value
+        console.log(info)
+    }
+
+    function upload_sex(event) {
+        const sex = document.getElementById("sex");
+
+        const index = sex.selectedIndex;
+        info.sex = sex.options[index].text;
+        console.log(info)
+    }
+
+    function upload_date() {
+        info.birthday = document.getElementById('date').value
+        console.log(info)
+    }
+
+    function upload_des() {
+        info.personalIntroduction = document.getElementById('describe').value
+        console.log(info)
+    }
+
+    function alter() {
+        $.ajax({
+            url: "/user/info/info-alter",
+            type: "POST",
+            data: JSON.stringify(info), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: false,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log(res)
+                if (res === 0) {
+                    alert('更改失败')
+                }
+                else {
+                    alert('更改成功')
+                    window.close()
+                }
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+    }
+</script>
+</html>

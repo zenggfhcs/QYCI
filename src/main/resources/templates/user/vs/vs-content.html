@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title data-th-text="${info} == null ? '教学' : ${info.title}"></title>
+    <link rel="stylesheet" data-th-href="@{/content/vs-content.css}" href=""/>
+    <link rel="stylesheet" data-th-href="@{/content/comment.css}" href=""/>
+    <link rel="stylesheet" data-th-href="@{/content/author-box.css}" href=""/>
+
+    <!-- 富文本 -->
+    <script data-th-src="@{/editor/main/comment_editor.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/main/froala_editor.css}" href=""/>
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+
+    <!-- 图片 -->
+<!--    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}"/>-->
+<!--    <script data-th-src="@{/editor/image.min.js}"></script>-->
+
+    <script data-th-src="@{/jquery.js}"></script>
+</head>
+<body onload="load_init()">
+<div id="author-info-box">
+    <img id="author-cover" data-th-src="${info.getFrom().getHeadImage()}" alt="1" src="">
+    <div id="author-name" class="text-box">
+        <span data-th-text="${info.getFrom().getName()}"></span>
+    </div>
+    <div id="author-id" class="text-box">
+        <span data-th-text="${info.getFrom().getId()}"></span>
+    </div>
+    <div id="author-describe" class="text-box">
+        <span data-th-text="${info.getFrom().getPersonalIntroduction()}"></span>
+    </div>
+</div>
+<div id="video-main">
+    <div data-th-object="${info}">
+        <video id="video" data-th-src="*{link}" controls="controls"></video>
+        <div id="video-info" data-th-value="*{id}">
+            <div style="display: flex;">
+                <div style="display: flex; flex-direction: column">
+                    <div class="lc-box">
+                        <img class="default-icon" data-th-id="'video-like' + *{id}"
+                             data-th-onclick="'neg_like(\'video-like\', \'video-dislike\',' +  *{id} + ',\'-l\')'"
+                             src="http://10.3.109.11/like/like-default.png" alt="">
+                        <img class="selected-icon" data-th-id="'video-dislike' + *{id}"
+                             data-th-onclick="'neg_like(\'video-dislike\', \'video-like\',' +  *{id} + ')'"
+                             src="http://10.3.109.11/like/like-selected.png" alt="">
+                        <div class="confirm-box"
+                             data-th-id="'login-confirm-box-l' + *{id}">
+                            <p>未登录，是否前去登录？</p>
+                            <div style="display: flex">
+                                <button data-th-onclick="'box_hidden(\'#login-confirm-box-l'+ *{id} +'\')'">取消
+                                </button>
+                                <button onclick="window.open('/login/index', '_blank')">确认</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lc-box">
+                        <img class="default-icon" data-th-id="'video-collect' + *{id}"
+                             data-th-onclick="'neg_like(\'video-collect\', \'video-no-collect\',' +  *{id} + ',\'-c\')'"
+                             src="http://10.3.109.11/like/collect-default.png" alt="">
+                        <img class="selected-icon" id="no-collect-btn" data-th-id="'video-no-collect' + *{id}"
+                             data-th-onclick="'neg_like(\'video-no-collect\', \'video-collect\',' +  *{id} + ')'"
+                             src="http://10.3.109.11/like/collect-selected.png" alt="">
+                        <div class="confirm-box"
+                             data-th-id="'login-confirm-box-c' + *{id}">
+                            <p>未登录，是否前去登录？</p>
+                            <div style="display: flex">
+                                <button data-th-onclick="'box_hidden(\'#login-confirm-box-c'+ *{id} +'\')'">取消
+                                </button>
+                                <button onclick="window.open('/login/index', '_blank')">确认</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="video-title" data-th-text="*{title}"></div>
+            </div>
+            <div class="divider"></div>
+            <div id="video-synopsis">
+                <div style="margin: 0 0 0.5vw;"><span data-th-utext="*{synopsis}"></span></div>
+                <div id="video-tags">
+                    <div id="video-tag-box">
+                        <ul id="video-tag-list">
+                            <li data-th-each="tag : ${tags}" data-th-text="${tag.getTagInfo().name}">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div id="publish-info">
+                <div class="time" data-th-text="*{publishTime}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="comment-box">
+        <div id="comment-head">
+            <span>评论</span>
+            <form action="#">
+                <input type="radio" id="up-to-date" name="comment-sort-type" value="1" checked/>
+                <label for="up-to-date" id="up-to-data-label">最新</label>
+                <input type="radio" id="up-to-like" name="comment-sort-type" value="0"/>
+                <label for="up-to-like" id="up-to-like-label">最热</label>
+            </form>
+        </div>
+        <div id="editor-box">
+            <label for="my_editor"></label><textarea id="my_editor"></textarea>
+            <div id="submit-box">
+                <img class="sub-comment-d" src="http://10.3.109.11/comment-submit.png" alt="评论">
+                <img class="sub-comment-s" src="http://10.3.109.11/comment-submit-s.png"
+                     onclick="submit_comment('#login-confirm-box-com')"
+                     alt="评论">
+                <div style="position: relative; z-index: 10">
+                    <div class="confirm-box" style="bottom: 0;"
+                         id="login-confirm-box-com">
+                        <p>未登录，是否前去登录？</p>
+                        <div style="display: flex">
+                            <button onclick="box_hidden('#login-confirm-box-com')">取消</button>
+                            <button onclick="window.open('/login/index', '_blank')">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="reply-box">
+                <p class="reply-text" style="color: #506D6D;">reply&nbsp;:&nbsp;</p>
+                <p class="reply-text" id="reply-name"></p>
+                <img id="reply-cancel" src="http://10.3.109.11/cancel.png" onclick="cancel_reply()" alt/>
+            </div>
+        </div>
+        <div id="comment-content">
+            <div id="comment-list">
+                <ul>
+                    <li data-th-each="comment : ${comments}">
+                        <div class="comment-item">
+                            <div class="comment-pl-head-img">
+                                <img data-th-src="${comment.getFrom().getHeadImage()}" alt="" src=""/>
+                            </div>
+                            <div class="comment-item-content">
+                                <div class="publish-box">
+                                    <div class="publish-name" data-th-text="${comment.getFrom().getName()}"></div>
+                                    <div style="float: left;"
+                                         data-th-style="${comment.getTo() == null ? 'display: none' : 'display: block'}">
+                                        <span style="float: left;"> 回复 </span>
+                                        <div class="publish-name"
+                                             data-th-text="${comment.getTo() == null ? '' : comment.getTo().getName()}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-content">
+                                    <div data-th-utext="${comment.getContent()}"></div>
+                                    <div class="item-data">
+                                        <div class="data-time" data-th-text="${comment.getPublishTime()}"></div>
+                                        <div class="comment-reply-btn">
+                                            <button
+                                                    data-th-value="'{\'id\':\'' + ${comment.getFrom().getId()} + '\',\'name\':\'' + ${comment.getFrom().getName()} + '\'}'"
+                                                    onclick="mark_reply(this.value)" th:title="点击回复">回复
+                                            </button>
+                                        </div>
+                                        <div class="lc-box">
+                                            <img class="default-icon" data-th-id="'comment-like' + ${comment.id}"
+                                                 data-th-onclick="'neg_like(\'comment-like\', \'comment-dislike\',' + ${comment.id} + ')'"
+                                                 src="http://10.3.109.11/like/like-default.png" alt="">
+
+                                            <img class="selected-icon" data-th-id="'comment-dislike' + ${comment.id}"
+                                                 data-th-onclick="'neg_like(\'comment-dislike\', \'comment-like\',' + ${comment.id} + ')'"
+                                                 src="http://10.3.109.11/like/like-selected.png" alt="">
+                                            <div class="confirm-box"
+                                                 data-th-id="'login-confirm-box' + ${comment.id}">
+                                                <p>未登录，是否前去登录？</p>
+                                                <div style="display: flex">
+                                                    <button data-th-onclick="'box_hidden(\'#login-confirm-box'+ ${comment.id} +'\')'">
+                                                        取消
+                                                    </button>
+                                                    <button onclick="window.open('/login/index', '_blank')">确认
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="comment-dlt-btn"
+                                             data-th-style="${user != null && user.getId() != null && user.getId().equals(comment.getFrom().id)} ? 'display: block' : 'display: none'">
+                                            <div style="position: relative; display: flex; flex-direction: column;">
+                                                <div class="confirm-box"
+                                                     data-th-id="'delete-confirm-box' + ${comment.id}">
+                                                    <p>确定删除这条评论吗</p>
+                                                    <div style="display: flex">
+                                                        <button data-th-onclick="'box_hidden(\'#delete-confirm-box'+ ${comment.id} +'\')'">
+                                                            取消
+                                                        </button>
+                                                        <button data-th-onclick="'delete_comment(' + ${comment.id} + ')'">
+                                                            确认
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button data-th-value="${comment.id}"
+                                                        data-th-onclick="'box_appear(\'#delete-confirm-box' + ${comment.id} + '\')'">
+                                                    删除
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script data-th-src="@{/tool.js}"></script>
+<script>
+
+    function load_init() {
+        const list = document.querySelector('#video-tag-list')
+        list.addEventListener('wheel', (event) => {
+            event.preventDefault()
+            list.scrollLeft += event.deltaY / 2
+        })
+    }
+
+    /**
+     * 点赞反转
+     * @param hid_type 说明要隐藏的 img，有 视频点赞、视频收藏、评论点赞三种
+     * @param app_type 说明要显示的 img，有 视频点赞、视频收藏、评论点赞三种
+     * @param id       配合以上拼接为 对应的 img id
+     * @param box_type 非评论时添加，说明是 点赞还是收藏
+     */
+    function neg_like(hid_type, app_type, id, box_type) {
+        if (check_login()) {
+            let box_name = "#login-confirm-box";
+            if (box_type !== undefined) {
+                box_name += box_type
+            }
+            box_appear(box_name + id)
+            return;
+        }
+        let hidden = $('#' + hid_type + id)
+        let appear = $('#' + app_type + id)
+        switch (hid_type) {
+            case 'comment-like': {
+                // 评论点赞
+                break
+            }
+            case 'comment-dislike': {
+                // 评论取消点赞
+                break
+            }
+            case 'video-like': {
+                // 视频点赞
+                break
+            }
+            case 'video-dislike': {
+                // 视频取消点赞
+                break
+            }
+            case 'video-collect': {
+                // 视频收藏
+                break
+            }
+            case 'video-no-collect': {
+                // 视频取消收藏
+                break
+            }
+        }
+        like_switch(hidden, appear)
+    }
+
+    /**
+     * 状态切换
+     * @param hidden
+     * @param appear
+     */
+    function like_switch(hidden, appear) {
+        hidden.css({
+            "width": "0",
+            "height": "0",
+            "margin": ".5rem"
+        })
+        setTimeout(() => {
+            appear.css({
+                "width": "1rem",
+                "height": "1rem",
+                "margin": "0"
+            })
+        }, 300)
+    }
+
+    const setTime_hidden = new Map();
+
+    function box_appear(id_name) {
+        clearTimeout(setTime_hidden.get(id_name))
+        $(id_name).css({
+            "width": "12rem"
+        })
+        setTime_hidden.set(id_name, setTimeout(() => box_hidden(id_name), 3000))
+
+    }
+
+    function box_hidden(id_name) {
+        $(id_name).css({
+            "width": "0"
+        })
+    }
+
+    /**
+     * 删除评论
+     * @param id
+     */
+    function delete_comment(id) {
+        const comment = {
+            id: id
+        }
+        // 删除评论
+
+        $.ajax({
+            url: "/user/vs/vs-content/delete-comment",
+            type: "POST",
+            data: JSON.stringify(comment), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log('res', res)
+                alert("删除成功")
+                location.reload()
+            },
+            error: err => {
+                console.log("err", err)
+                alert("发生错误")
+            }
+        })
+    }
+
+    function submit_comment(box_name) {
+        if (check_login()) {
+            box_appear(box_name)
+            return;
+        }
+        const content = editor.html.get();
+        if (content.length === 0) {
+            alert('评论内容为空')
+            return
+        }
+        const comment = {
+            teach: document.getElementById('video-info').getAttribute('value'),
+            to: to,
+            content: content
+        }
+        $.ajax({
+            url: "/user/vs/vs-content/submit-comment",
+            type: "POST",
+            data: JSON.stringify(comment), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log('res', res)
+                switch (res) {
+                    case 1: {
+                        alert('评论成功')
+                        location.reload();
+                        break
+                    }
+                    case 0: {
+                        alert('评论失败')
+                        break
+                    }
+                    case -1: {
+                        if (confirm('未登录（或登录过期），是否前去登录') === false) {
+                            return
+                        }
+                        window.open('/login/index', '_blank')
+                    }
+                }
+            },
+            error: err => {
+                console.log("err", err)
+                alert("发生错误")
+            }
+        })
+
+    }
+
+    let to = {
+        id: '',
+        name: '',
+    }
+    /**
+     * 标记回复
+     * @param mark id
+     */
+    function mark_reply(mark) {
+        const seg = /^{'id':'([0-9]*)','name':'([\s\S]*)'}$/
+        to.id = seg.exec(mark)[1]
+        to.name = seg.exec(mark)[2]
+        $('#reply-name').html(to.name)
+        $('#reply-box').css({
+            "display": "flex"
+        })
+        editor.focus()
+        console.log(to)
+    }
+
+    /**
+     * 取消回复
+     */
+    function cancel_reply() {
+        $('#reply-box').css({
+            "display": "none"
+        })
+        to = {}
+        console.log(to)
+    }
+</script>
+<script>
+    let editor = new FroalaEditor('#my_editor', {
+        // 工具栏在底部
+        toolbarBottom: true,
+        //
+        toolbarButtons: {
+            'moreText': {
+                'buttons': []
+            },
+            'moreParagraph': {
+                'buttons': []
+            },
+            'moreRich': {
+                'buttons': ['insertImage', 'emoticons', 'specialCharacters']
+            },
+            'moreMisc': {
+                'buttons': [],
+                'align': 'right',
+                'buttonsVisible': 2
+            }
+
+        },
+        // pluginsEnabled: ['quote', 'image', 'align', 'emoticons', 'markdown', 'specialCharacters', 'lineHeight', 'table'],
+        pluginsEnabled: ['image', 'emoticons'],
+
+        attribution: false,
+
+
+        // Set the file upload parameter.
+        imageUploadParam: 'file',
+
+        // Set the image upload URL.
+        imageUploadURL: '/send/comment_upload_file',
+
+        // Additional upload params.
+        imageUploadParams: {id: 'my_editor'},
+
+        // Set request type.
+        imageUploadMethod: 'POST',
+
+        // Set max image size to 100MB.
+        imageMaxSize: 10 * 1024 * 1024,
+
+        // Allow to upload PNG and JPG.
+        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+
+        events: {
+            'image.beforeUpload': function (images) {
+                // Return false if you want to stop the image upload.
+            },
+            'image.uploaded': function (response) {
+                // Image was uploaded to the server.
+            },
+            'image.inserted': function ($img, response) {
+                // Image was inserted in the editor.
+            },
+            'image.replaced': function ($img, response) {
+                // Image was replaced in the editor.
+            },
+            'image.error': function (error, response) {
+                // Bad link.
+                if (error.code === 1) {
+
+                }
+
+                // No link in upload response.
+                else if (error.code === 2) {
+
+                }
+
+                // Error during image upload.
+                else if (error.code === 3) {
+
+                }
+
+                // Parsing response failed.
+                else if (error.code === 4) {
+
+                }
+
+                // Image too text-large.
+                else if (error.code === 5) {
+
+                }
+
+                // Invalid image type.
+                else if (error.code === 6) {
+
+                }
+
+                // Image can be uploaded only to same domain in IE 8 and IE 9.
+                else if (error.code === 7) {
+
+                }
+
+                // Response contains the original server response to the request if available.
+            }
+        }
+    });
+</script>
+</html>

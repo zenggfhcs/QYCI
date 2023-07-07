@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.TopicsCommentDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.TopicsComment">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="topics_id" jdbcType="INTEGER" property="topicsId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="topping" jdbcType="TINYINT" property="topping"/>
+        <result column="visible" jdbcType="BIT" property="visible"/>
+        <result column="review" jdbcType="BIT" property="review"/>
+        <result column="review_result" jdbcType="BIT" property="reviewResult"/>
+        <association property="to" javaType="com.qyci.entity.User" select="selectUserByKey" column="to">
+        </association>
+        <association property="from" javaType="com.qyci.entity.User" select="selectUserByKey" column="from">
+        </association>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.qyci.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="role" jdbcType="TINYINT" property="role" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="OTHER" property="sex" />
+        <result column="age" jdbcType="TINYINT" property="age" />
+        <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+        <result column="birthday" jdbcType="DATE" property="birthday" />
+        <result column="personal_introduction" jdbcType="VARCHAR" property="personalIntroduction" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, topics_id, `from`, `to`, content, like_count, publish_time, topping, `visible`,
+    review, review_result
+    </sql>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into topics_comment(topics_id, `from`, `to`, content, like_count, publish_time, topping, visible, review, review_result)
+        values (#{topicsId}, #{from.id}, #{to.id}, #{content}, 0, now(), 0, 1, 0, 0)
+    </insert>
+    <update id="updateByComment">
+        update topics_comment
+        set
+            visible = 0
+        where id = #{id}
+    </update>
+    <update id="updateById">
+        update topics_comment
+        set visible = 0
+        where topics_id = #{id}
+    </update>
+    <select id="selectByTopicsKey" resultMap="BaseResultMap">
+        select id,
+               topics_id,
+               `from`,
+               `to`,
+               content,
+               like_count,
+               publish_time,
+               topping,
+               `visible`,
+               review,
+               review_result
+        from topics_comment
+        where visible = 1
+          and topics_id = #{id}
+        order by publish_time desc
+    </select>
+    <select id="selectUserByKey" resultMap="UserResultMap">
+        select
+            `id`, `password`, `role`, email, `name`, `sex`, `age`, `head_image`, `birthday`, `personal_introduction`
+        from user
+        where id = #{key}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *
+        from topics_comment
+        where visible = 1
+    </select>
+</mapper>

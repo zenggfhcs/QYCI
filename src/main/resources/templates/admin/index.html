@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>审核</title>
+    <link rel="stylesheet" data-th-href="@{/admin/index.css}">
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+    <script data-th-src="@{/jquery.js}"></script>
+</head>
+<body onload="init()">
+<div id="left">
+    <div id="left-main">
+        <div id="admin-avatar">
+            <img src="http://10.3.109.11/user-default-avatar.jpg" alt="" onclick="window.open('/user/info', '_blank')">
+        </div>
+
+        <div id="operate-box">
+            <ul>
+                <li>
+                    <div>
+                        <input type="radio" name="operate" id="review" checked class="operate-item" onclick="page_switch (0)">
+                        <label for="review">审核</label>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <input type="radio" name="operate" id="comment-management" class="operate-item" onclick="page_switch (1)">
+                        <label for="comment-management">评论管理</label>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <input type="radio" name="operate" id="tag-management" class="operate-item" onclick="page_switch (2)">
+                        <label for="tag-management">标签管理</label>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <input type="radio" name="operate" id="user-management" class="operate-item" onclick="page_switch (3)">
+                        <label for="user-management">用户管理</label>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <input type="radio" name="operate" id="delete-management" class="operate-item" onclick="page_switch (4)">
+                        <label for="delete-management">内容管理</label>
+                    </div>
+                </li>
+<!--                <li>-->
+<!--                    <div>-->
+<!--                        <input type="radio" name="operate" id="log-management" class="operate-item">-->
+<!--                        <label for="log-management">日志</label>-->
+<!--                    </div>-->
+<!--                </li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+<iframe id="main-iframe" data-th-src="@{/admin/review}">
+</iframe>
+<script data-th-src="@{/tool.js}"></script>
+<script data-th-src="@{/admin/tools.js}"></script>
+<script>
+    function init() {
+        if (!login_check()) {
+            alert('请先登录')
+            window.location.href = '/login/index';
+        }
+    }
+    const array = ['/admin/review', '/admin/comment-mgt', '/admin/tag-mgt', '/admin/user-info-mgt','/admin/content-mgt' ]
+    function page_switch(index) {
+        // console.log(array[index])
+        $('#main-iframe').attr('src', array[index])
+    }
+</script>
+</body>
+</html>

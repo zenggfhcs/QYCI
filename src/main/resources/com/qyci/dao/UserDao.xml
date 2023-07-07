@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="role" jdbcType="TINYINT" property="role" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="OTHER" property="sex" />
+        <result column="age" jdbcType="TINYINT" property="age" />
+        <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+        <result column="birthday" jdbcType="DATE" property="birthday" />
+        <result column="personal_introduction" jdbcType="VARCHAR" property="personalIntroduction" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        `id`, `password`, `role`, email, `name`, `sex`, `age`, `head_image`, `birthday`, `personal_introduction`
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="checkContains" resultType="java.lang.Integer">
+        select count(*)
+        from
+            user
+        where email=#{email, jdbcType=VARCHAR}
+    </select>
+    <select id="selectRole" resultType="java.lang.Byte">
+        select role
+        from user
+        where id=#{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where `email` = #{email}
+    </select>
+    <select id="selectAllOrdinaryUser" resultMap="BaseResultMap">
+        select *
+        from user
+        where role = 17
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from user
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.qyci.entity.User" useGeneratedKeys="true">
+        insert into user (`password`, `role`, email,
+                          `name`, sex, age, head_image,
+                          birthday, personal_introduction)
+        values (MD5(#{password,jdbcType=VARCHAR}), 17, #{email,jdbcType=VARCHAR},
+                'momo', '女', 0, 'http://10.3.109.11/user-default-avatar.jpg',
+                null, '')
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.qyci.entity.User">
+        update user
+        set `password`            = MD5(#{password,jdbcType=VARCHAR}),
+            `role`                = #{role,jdbcType=TINYINT},
+            email                 = #{email,jdbcType=VARCHAR},
+            `name`                = #{name,jdbcType=VARCHAR},
+            sex                   = #{sex,jdbcType=OTHER},
+            age                   = #{age,jdbcType=TINYINT},
+            head_image            = #{headImage,jdbcType=VARCHAR},
+            birthday              = #{birthday,jdbcType=DATE},
+            personal_introduction = #{personalIntroduction,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updatePassword">
+        update user
+        set password=MD5(#{password,jdbcType=VARCHAR})
+        where email = #{email,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByUser">
+        update user
+        <set>
+            <if test="headImage != null and headImage != ''">
+                head_image = #{headImage},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="personalIntroduction != null and personalIntroduction != ''">
+                personal_introduction = #{personalIntroduction},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="resetNameById">
+        update user
+        set `name` = CONCAT('momo',#{id})
+        where id = #{id}
+    </update>
+    <update id="resetPiById">
+        update user
+        set personal_introduction = ''
+        where id = #{id}
+    </update>
+    <update id="resetHeadImageById">
+        update user
+        set head_image = 'http://10.3.109.11/user-default-avatar.jpg'
+        where id = #{id}
+    </update>
+    <update id="updateRoleById">
+        update user
+        set `role` = 7
+        where id = #{id}
+    </update>
+
+</mapper>

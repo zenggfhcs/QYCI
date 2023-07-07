@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content" data-th-fragment="content">
+    <div class="tags-box">
+        <div class="tag-item-box" data-th-each="tag : ${parents}">
+            <input type="text" maxlength="15"
+                   size="30"
+                   name="tags"
+                   readonly = 'readonly'
+                   data-th-value="${tag.name}"
+                   class="item parents"
+                   data-th-onclick="'show_subset(\'comp-parents-' + ${tag.id} + '\')'"
+                   data-th-id="'comp-parents-' + ${tag.id}"/>
+        </div>
+        <button id="add-parents" onclick="add_tag('add-parents', 'comp-parents')">add</button>
+    </div>
+
+    <div class="tags-box">
+        <div data-th-each="tag : ${sons}" data-th-class="'tag-item-box item-box ' + ${tag.parents}">
+            <input type="text" maxlength="15"
+                   size="30"
+                   data-th-name="${tag.parents}"
+                   readonly = 'readonly'
+                   data-th-value="${tag.name}"
+                   class="item son"
+                   data-th-id="'comp-son-' + ${tag.id}"/>
+        </div>
+        <button id="add-son" onclick="add_tag('add-son', 'comp-son')">add</button>
+    </div>
+</div>
+</body>
+</html>

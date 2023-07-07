@@ -1,0 +1,29 @@
+#comp-info-box {
+    position: fixed;
+    top: 3rem;
+    /* left: 2vw; */
+    right: 75.5vw;
+    width: 16rem;
+    border-radius: 0.5rem;
+    background-color: #506d6d;
+    max-height: 93vh;
+}
+
+#comp-info-box ul {
+    padding: .5rem;
+    list-style-type: none;
+}
+
+#comp-info-box li {
+    padding: 0 .5rem .5rem;
+}
+
+.info-title {
+    color: #333;
+    text-align: left;
+}
+
+.info-content {
+    text-align: right;
+    color: wheat;
+}

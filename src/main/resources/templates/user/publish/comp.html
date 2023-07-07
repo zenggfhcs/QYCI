@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" data-th-href="@{/publish/comp.css}">
+
+
+    <link rel="stylesheet" data-th-href="@{/editor/main/froala_editor.css}">
+    <title>发布-竞赛</title>
+</head>
+
+<body onload='init()'>
+<div style="width: 40vw; margin: 0 auto;">
+
+    <div id="back">
+        <!-- *基本信息* -->
+        <div class="top">
+            <div class="top-title-box">
+                <span class="top-title">基本信息</span>
+            </div>
+        </div>
+        <div class="content">
+            <!-- 赛事名称 -->
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <div class="content-title-box" id="contest-title">赛事名称</div>
+                        <input class="content-input-text" id="contest-comp-name-text" type="text"
+                               placeholder="" minlength="5">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box" id="Organizer-title">主办方</div>
+                        <input class="content-input-text" id="contest-or-title-text" type="text"
+                               placeholder="">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box">协办单位</div>
+                        <input class="content-input-text" id="contest-oc-title-text" type="text"
+                               placeholder="">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box">联系方式</div>
+                        <input class="content-input-text" type="text" id="relation-text"
+                               placeholder="">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box">赛事人数</div>
+                        <input class="content-input-text" id="number-text" type="number"
+                               placeholder="" maxlength="9">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box">报名时间</div>
+                        <div class="time-content-box">
+                            <div class="time-content-title">start</div>
+                            <input class="date" id="enroll-date-begin"
+                                   type="datetime-local">
+                            <div class="time-content-title">end</div>
+                            <input class="date" id="enroll-date-end"
+                                   type="datetime-local">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box">赛事时间</div>
+                        <div class="time-content-box">
+                            <div class="time-content-title">start</div>
+                            <input class="date" id="contest-date-begin"
+                                   type="datetime-local">
+                            <div class="time-content-title">end</div>
+                            <input class="date" id="contest-date-end"
+                                   type="datetime-local">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="content-title-box">赛事分类</div>
+                        <div class="content-input-text">
+                            <div id="vs-classify-box">
+                                <ul id="tags-box">
+                                    <li data-th-each="tag : ${tags}">
+                                        <div class="tag-item-box">
+                                            <input type="radio" name="tags" value=""
+                                                   data-th-onclick="'change_tag(\'' + ${tag.id} + '\')'"
+                                                   data-th-id="'tag' + ${tag.id}"/>
+                                            <label data-th-for="'tag' + ${tag.id}" data-th-text="${tag.name}"></label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- 富文本 -->
+            <div class="top">
+                <div class="top-title-box">
+                    <span class="top-title">具体内容</span>
+                </div>
+            </div>
+            <div style="background-color: wheat;" id="my_editor"></div>
+        </div>
+        <div class="top">
+            <input type="submit" id="submit" value="提交" onclick="submit()">
+        </div>
+        <!-- 底部留空 -->
+        <div style="height: 100px;">
+
+        </div>
+    </div>
+</div>
+<script>
+    function init() {
+        let list = document.querySelectorAll('#vs-classify-box')
+        for (let i = 0; i < list.length; i++) {
+            list[i].addEventListener('wheel', (event) => {
+                event.preventDefault()
+                list[i].scrollLeft += event.deltaY / 2
+            })
+        }
+    }
+</script>
+
+<script type="text/javascript" data-th-src="@{/editor/main/comment_editor.js}"></script>
+<script type="text/javascript" data-th-src="@{/jquery.js}"></script>
+<script>
+    const comp = {
+        //赛事名称
+        name: '',
+        //主办方名称
+        organizer: '',
+        //协办方名称
+        coOrganizer: '',
+        //联系方式
+        contact: '',
+        //赛事人数
+        maxEnrollCount: '',
+        //报名开始日期
+        enrollStartTime: '',
+        //报名结束日期
+        enrollEndTime: '',
+        //赛事开始日期
+        actStartTime: '',
+        //赛事结束日期
+        actEndTime: '',
+        //富文本
+        content: ''
+    }
+
+    let tag_id = ''
+
+    function change_tag(id) {
+        tag_id = id
+    }
+
+    function submit() {
+        comp.name = $('#contest-comp-name-text').val()
+        if (comp.name === '') {
+            alert("名称为空")
+            return
+        }
+        comp.organizer = $('#contest-or-title-text').val()
+        comp.coOrganizer = $('#contest-oc-title-text').val()
+        if (comp.organizer === '') {
+            alert("主办方为空")
+            return
+        }
+        comp.contact = $('#relation-text').val()
+        if (comp.contact === '') {
+            alert('联系方式为空')
+            return
+        }
+        comp.maxEnrollCount = $('#number-text').val()
+        if (comp.maxEnrollCount === '') {
+            alert('赛事人数为空')
+            return
+        }
+        comp.enrollStartTime =
+            $('#enroll-date-begin').val()
+                .replace('T', ' ')
+        comp.enrollEndTime =
+            $('#enroll-date-end').val()
+                .replace('T', ' ')
+        if (comp.enrollStartTime === '' || comp.enrollEndTime === '') {
+            alert('错误的报名时间段')
+            return
+        }
+        if (Date.parse(comp.enrollEndTime) <= new Date().getTime()) {
+            alert('报名结束时间小于当前时间')
+            return
+        }
+        if (Date.parse(comp.enrollStartTime) >= Date.parse(comp.enrollEndTime)) {
+            alert('报名开始时间大于结束时间')
+            return
+        }
+
+        comp.actStartTime =
+            $('#contest-date-begin').val()
+                .replace("T", " ")
+        comp.actEndTime =
+            $('#contest-date-end').val()
+                .replace("T", " ")
+        if (comp.actStartTime === '' || comp.actEndTime === '') {
+            alert('错误的赛事时间段')
+            return
+        }
+        if (Date.parse(comp.actStartTime) <= new Date().getTime()) {
+            alert('赛事开始时间小于当前时间')
+            return
+        }
+        if (Date.parse(comp.actStartTime) >= Date.parse(comp.actEndTime)) {
+            alert('赛事开始时间大于结束时间')
+            return
+        }
+        console.log(comp)
+
+        comp.content = editor.html.get()
+        if (comp.content === '') {
+            alert('内容为空')
+            return
+        }
+
+        if (tag_id === '') {
+            alert("类别为空")
+            return
+        }
+        //
+        // console.log(comp)
+
+        $.ajax({
+            url: '/user/publish/comp/publish',
+            type: 'POST',
+            data: JSON.stringify(comp), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                if (res === -1) {
+                    if (confirm('未登录，是否前去登录') === true) {
+                        window.open('/login/index', '_blank')
+                    }
+                    return
+                }
+                if (res === 0) {
+                    alert('发布错误')
+                    return
+                }
+                const tag = {
+                    compId: res,
+                    tagId: tag_id
+                }
+                $.ajax({
+                    url: '/user/publish/comp/publish-tag',
+                    type: 'POST',
+                    data: JSON.stringify(tag), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                    success: res => {
+                        if (res === 0) {
+                            alert('分类添加失败')
+                            // 发生错误
+                        } else {
+                            alert('发布成功')
+                            window.close()
+                        }
+                    },
+                    error: err => {
+                        console.log('err', err)
+                    }
+                })
+
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+    }
+
+    let editor = new FroalaEditor('#my_editor', {
+        // 工具栏在底部
+        toolbarBottom: true,
+        //
+        toolbarButtons: {
+            'moreText': {
+                'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript',
+                    'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle',
+                    'clearFormatting',
+                ]
+            },
+            'moreParagraph': {
+                'buttons': [
+                    'emoticons',
+                    'insertImage',
+                    'insertTable',
+                    'specialCharacters',
+                    'insertHR',
+                    'paragraphFormat',
+                    'paragraphStyle',
+                    'align',
+                    'lineHeight',
+                    'quote',
+                    'lists'
+                ],
+            },
+            'moreMisc': {
+                'buttons': ['undo', 'redo'],
+                'align': 'right',
+                'buttonsVisible': 2
+            }
+
+        },
+
+        attribution: false,
+        pluginsEnabled: ['quote', 'image', 'align', 'emoticons', 'specialCharacters', 'lineHeight', 'table',
+            'lists', 'paragraphFormat', 'paragraphStyle', 'file'
+        ],
+        // pluginsEnabled: ['emoticons', 'image', 'colors', 'align', 'table', 'specialCharacters', 'lineBreaker'],
+
+
+
+        // Set the file upload parameter.
+        imageUploadParam: 'file',
+
+        // Set the image upload URL.
+        imageUploadURL: '/send/comment_upload_file',
+
+        // Additional upload params.
+        imageUploadParams: {id: 'my_editor'},
+
+        // Set request type.
+        imageUploadMethod: 'POST',
+
+        // Set max image size to 100MB.
+        imageMaxSize: 10 * 1024 * 1024,
+
+        // Allow to upload PNG and JPG.
+        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+
+        events: {
+            'image.beforeUpload': function (images) {
+                // Return false if you want to stop the image upload.
+            },
+            'image.uploaded': function (response) {
+                // Image was uploaded to the server.
+            },
+            'image.inserted': function ($img, response) {
+                // Image was inserted in the editor.
+            },
+            'image.replaced': function ($img, response) {
+                // Image was replaced in the editor.
+            },
+            'image.error': function (error, response) {
+                // Bad link.
+                if (error.code === 1) {
+
+                }
+
+                // No link in upload response.
+                else if (error.code === 2) {
+
+                }
+
+                // Error during image upload.
+                else if (error.code === 3) {
+
+                }
+
+                // Parsing response failed.
+                else if (error.code === 4) {
+
+                }
+
+                // Image too text-large.
+                else if (error.code === 5) {
+
+                }
+
+                // Invalid image type.
+                else if (error.code === 6) {
+
+                }
+
+                // Image can be uploaded only to same domain in IE 8 and IE 9.
+                else if (error.code === 7) {
+
+                }
+
+                // Response contains the original server response to the request if available.
+            }
+        }
+    });
+</script>
+</body>
+</html>

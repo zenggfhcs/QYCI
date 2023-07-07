@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布话题</title>
+    <link rel="stylesheet" data-th-href="@{/publish/topic.css}">
+    <link rel="stylesheet" data-th-href="@{/editor/main/froala_editor.css}">
+    <script type="text/javascript" data-th-src="@{/editor/main/comment_editor.js}"></script>
+</head>
+<body onload="init()">
+<div id="publish-topic-box">
+    <div id="publish-topic-main">
+        <div class="top-title">
+            <p>话题标题</p>
+        </div>
+        <label for="title-textarea"></label><input type="text" id="title-textarea" placeholder="title"
+                                                   onchange="upload_title()"/>
+        <div class="top-title">
+            <p>话题描述</p>
+        </div>
+        <div id="my_editor"></div>
+
+        <div class="top-title">
+            <p>话题标签</p>
+        </div>
+        <div id="tags-box">
+            <div class="tag-item-box" data-th-each="tag : ${tags}">
+                <input type="checkbox" name="tags" value="" data-th-id="'tag' + ${tag.id}"
+                       onclick="return tag_select(this)"/>
+                <label data-th-for="'tag' + ${tag.id}" data-th-text="${tag.name}"></label>
+            </div>
+        </div>
+        <div id="top-box">
+            <button id="publish" onclick="publish()">
+                发布
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+<script data-th-src="@{/jquery.js}"></script>
+<script>
+    const topic = {
+        title: '',
+        content: ''
+    }
+
+    function upload_title() {
+        topic.title = $('#title-textarea').val()
+    }
+
+    function publish() {
+        const content = editor.html.get()
+        console.log(content)
+        topic.content = content
+
+        if (topic.title === '') {
+            alert('标题为空')
+            return
+        }
+        if (topic.content === '') {
+            alert('内容为空')
+            return
+        }
+
+        //
+        console.log(topic)
+
+        $.ajax({
+            url: '/user/publish/topic/publish',
+            type: 'POST',
+            data: JSON.stringify(topic), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log('res', res)
+                if (res === -1) {
+                    if (confirm('未登录，是否前去登录') === true) {
+                        window.open('/login/index', '_blank')
+                    }
+                    else {
+
+                    }
+                    return
+                }
+                if (res === 0) {
+                    alert('发布错误')
+                    return
+                }
+                if (tag_selected_num > 0) {
+                    let list = document.getElementsByName('tags')
+                    let tags = []
+                    tags.push(res)
+                    list.forEach(item => {
+                        if (item.checked) {
+                            tags.push(/^tag(\d+)$/.exec(item.id)[1])
+                        }
+                    })
+                    $.ajax({
+                        url: '/user/publish/topic/publish-tag',
+                        type: 'POST',
+                        data: JSON.stringify(tags), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                        async: true,
+                        dataType: 'json',
+                        cache: false,
+                        processData: false,
+                        contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                        success: res => {
+                            console.log('res', res)
+                            if (res === 0) {
+                                alert('分类添加失败')
+                                // 发生错误
+                            }
+                            else {
+                                alert('发布成功')
+                                window.close()
+                            }
+
+                        },
+                        error: err => {
+                            console.log('err', err)
+                        }
+                    })
+                }
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+    }
+
+    let tag_selected_num = 0
+
+    function init() {
+    }
+
+    function tag_select(tag) {
+        if (tag.checked) {
+            if (tag_selected_num >= 3) {
+                alert('标签最多选择三个')
+                return false
+            } else {
+                tag_selected_num++
+            }
+        } else {
+            tag_selected_num--
+        }
+        return true
+    }
+</script>
+<script>
+    let editor = new FroalaEditor('#my_editor', {
+        // 工具栏在底部
+        toolbarBottom: true,
+        //
+        toolbarButtons: {
+            'moreText': {
+                'buttons': []
+            },
+            'moreParagraph': {
+                'buttons': []
+            },
+            'moreRich': {
+                'buttons': ['emoticons', 'insertImage']
+            },
+            'moreMisc': {
+                'buttons': [],
+                'align': 'right',
+                'buttonsVisible': 2
+            }
+
+        },
+
+        attribution: false,
+        pluginsEnabled: ['emoticons', 'image'],
+
+
+        // Set the file upload parameter.
+        imageUploadParam: 'file',
+
+        // Set the image upload URL.
+        imageUploadURL: '/send/comment_upload_file',
+
+        // Additional upload params.
+        imageUploadParams: {id: 'my_editor'},
+
+        // Set request type.
+        imageUploadMethod: 'POST',
+
+        // Set max image size to 100MB.
+        imageMaxSize: 10 * 1024 * 1024,
+
+        // Allow to upload PNG and JPG.
+        imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+
+        events: {
+            'image.beforeUpload': function (images) {
+                // Return false if you want to stop the image upload.
+            },
+            'image.uploaded': function (response) {
+                // Image was uploaded to the server.
+            },
+            'image.inserted': function ($img, response) {
+                // Image was inserted in the editor.
+            },
+            'image.replaced': function ($img, response) {
+                // Image was replaced in the editor.
+            },
+            'image.error': function (error, response) {
+                // Bad link.
+                if (error.code === 1) {
+
+                }
+
+                // No link in upload response.
+                else if (error.code === 2) {
+
+                }
+
+                // Error during image upload.
+                else if (error.code === 3) {
+
+                }
+
+                // Parsing response failed.
+                else if (error.code === 4) {
+
+                }
+
+                // Image too text-large.
+                else if (error.code === 5) {
+
+                }
+
+                // Invalid image type.
+                else if (error.code === 6) {
+
+                }
+
+                // Image can be uploaded only to same domain in IE 8 and IE 9.
+                else if (error.code === 7) {
+
+                }
+
+                // Response contains the original server response to the request if available.
+            }
+        }
+    });
+</script>
+</html>

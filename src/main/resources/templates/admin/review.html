@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link data-th-href="@{/admin/right.css}" rel="stylesheet">
+    <link data-th-href="@{/info/info-comp.css}" rel="stylesheet">
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+    <style>
+        td {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body onload="init()">
+<div id="right">
+    <div id="r-left">
+        <div class="type-box" id="tag-type-box">
+            <ul>
+                <li>
+                    <input checked id="tag-teach" name="tag-info-type" onclick="set_type(0)" type="radio">
+                    <label for="tag-teach">教学</label>
+                </li>
+                <li>
+                    <input id="tag-comp" name="tag-info-type" onclick="set_type(1)" type="radio">
+                    <label for="tag-comp">竞赛</label>
+                </li>
+                <li>
+                    <input id="tag-topic" name="tag-info-type" onclick="set_type(2)" type="radio">
+                    <label for="tag-topic">话题</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="r-main">
+        <div id="content-box" style="height: 50rem"></div>
+    </div>
+</div>
+<script data-th-src="@{/tool.js}"></script>
+<script data-th-src="@{/jquery.js}"></script>
+<script>
+    let type = 0
+    let url = "/admin/review/content-teach"
+
+    // 初始化函数
+    function init() {
+        select()
+    }
+
+    function set_type(type_value) {
+        type = type_value
+        switch (type) {
+            case 0: {
+                url = "/admin/review/content-teach"
+                break;
+            }
+            case 1: {
+                url = "/admin/review/content-comp"
+                break;
+            }
+            case 2: {
+                url = "/admin/review/content-topic"
+                break;
+            }
+        }
+        select()
+    }
+
+    function select() {
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: '', // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            // dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                // console.log(res)
+                $("#content-box").html(res)
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+
+    }
+
+    const judge = {
+        id: '',
+        review: false,
+        reviewResult: '',
+    }
+
+    function passOrReject(id, review, review_result) {
+        judge.id = id;
+        judge.review = review;
+        judge.reviewResult = review_result;
+        var url1 = url + '/update-state';
+        $.ajax({
+            url: url1,
+            type: "post",
+            data: JSON.stringify(judge), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                if(res === 0){
+                    alert("发生未知错误，请稍后再试")
+                }
+                else if (res === 1)
+                {
+                    alert("操作成功");
+                    select();
+                }
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+    }
+</script>
+</body>
+</html>

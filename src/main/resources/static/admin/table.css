@@ -1,0 +1,38 @@
+#table-info {}
+
+#table-info table {
+    width: 46rem;
+}
+
+#table-info tr {
+
+    /* display: flex; */
+
+    height: 3rem;
+}
+
+
+#table-info tr th {
+    border: 1px solid #999;
+    color: white;
+    font-size: 1.2rem;
+    min-width: 5rem;
+    background-color: #709C99;
+}
+
+#table-info tr td {
+    color: #4E5E5D;
+    white-space: nowrap;
+    width: min-content;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+#table-info tr:nth-child(2n) {
+    background-color: #EEF6F6;
+}
+
+
+#table-info tr:nth-child(2n - 1) {
+    background-color: #C8DCDC;
+}

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" data-th-href="@{/admin/right.css}">
+    <link rel="stylesheet" data-th-href="@{/admin/tag.css}">
+    <style>
+        #menu {
+            width: 5rem;
+            padding: 0;
+            height: 0;
+            position: absolute;
+            background-color: #244d4d;
+            overflow: hidden;
+            transition: all .3s;
+        }
+
+        #menu button {
+            height: 1.5rem;
+            width: 5rem;
+            border: 0;
+            color: #244d4d;
+            text-align: center;
+            background-color: wheat;
+        }
+
+        #menu button:hover {
+            background-color: #244d4d;
+            color: wheat;
+        }
+    </style>
+</head>
+<body onload="init()">
+<div id="right">
+    <div id="r-left">
+        <div class="type-box" id="tag-type-box">
+            <ul>
+                <li>
+                    <input type="radio" id="tag-teach" checked name="tag-info-type" onclick="set_type(0)">
+                    <label for="tag-teach">教学</label>
+                </li>
+                <li>
+                    <input type="radio" id="tag-comp" name="tag-info-type" onclick="set_type(1)">
+                    <label for="tag-comp">竞赛</label>
+                </li>
+                <li>
+                    <input type="radio" id="tag-topic" name="tag-info-type" onclick="set_type(2)">
+                    <label for="tag-topic">话题</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="r-main">
+        <div id="content-box" style="height: 50rem"></div>
+    </div>
+</div>
+<div id="menu">
+    <button id="delete">删除</button>
+</div>
+<script data-th-src="@{/tool.js}"></script>
+<script data-th-src="@{/jquery.js}"></script>
+<script>
+    let type = 0
+    let url = "/admin/tag/tag-teach"
+
+    // 初始化函数
+    function init() {
+        select()
+        $('#delete').click(() => {
+            tag.id = /^.*?-(\d+)$/.exec(tag.id)[1]
+            console.log(tag)
+            if (confirm('确定删除吗？\n如果删除了父标签，子标签也一并会被删除') === true) {
+                // 删除
+                console.log('delete')
+                let dlt_url = url + '/delete'
+                $.ajax({
+                    url: dlt_url,
+                    type: "POST",
+                    data: JSON.stringify(tag), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                    success: res => {
+                        console.log(res)
+                        if (res === 0) {
+                            alert('发生未知错误')
+                        }
+                        else {
+                            alert('修改成功')
+                            select()
+                        }
+                    },
+                    error: err => {
+                        console.log(err)
+                    }
+                })
+            }
+        })
+    }
+
+    function set_type(type_value) {
+        type = type_value
+        switch (type) {
+            case 0: {
+                url = "/admin/tag/tag-teach"
+                break;
+            }
+            case 1: {
+                url = "/admin/tag/tag-comp"
+                break;
+            }
+            case 2: {
+                url = "/admin/tag/tag-topic"
+                break;
+            }
+        }
+        select()
+    }
+
+    const stack = []
+
+    function select() {
+        console.log("select")
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: '', // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            // dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                // console.log(res)
+                $("#content-box").html(res)
+
+                // 添加快捷菜单
+                let list = document.getElementsByClassName('item')
+                // console.log(list)
+                for (let i = 0; i < list.length; i++) {
+                    // console.log(i)
+                    list.item(i).addEventListener('contextmenu', (event) => {
+                        event.preventDefault()
+                        let menu = document.getElementById('menu'); //获取右键菜单
+                        menu.style.left = event.clientX + 'px'
+                        menu.style.top = event.clientY + 'px'
+                        menu.style.height = '1.5rem'
+                        tag.id = event.target.id
+                        event.stopPropagation()
+                    })
+                }
+
+                // 设置双击编辑和失去焦点验证
+                list = document.getElementsByClassName('item')
+                for (let i = 0; i < list.length; i++) {
+                    list.item(i).addEventListener('dblclick', (event) => {
+                        event.preventDefault()
+                        is_alter = true
+                        const input = $('#' + event.target.id)
+                        stack.push(input.val())
+                        input.attr('readonly', false)
+                    })
+
+                    list.item(i).addEventListener('blur', (event) => {
+                        event.preventDefault()
+                        if (!is_alter)
+                            return
+                        is_alter = false
+                        const input = $('#' + event.target.id)
+                        input.attr('readonly', true)
+                        const value = stack.pop()
+                        if (input.val() === '' || input.val() === value) {
+                            input.val(value)
+                            return
+                        }
+                        // ajax 修改数据库
+                        update_tag(get_index(event.target.id), event.target.id, input.val())
+                    })
+                }
+
+                // 设置默认选中
+                list = document.getElementsByClassName('parents')
+                if (list.length > 0) {
+                    // for (let i = 0; i < list.length; i++) {
+                    //     // 样式
+                    //     list.item(i).addEventListener('onclick', (event) => {
+                    //         $('#' + event.target.id).css({
+                    //             "background-color": "white",
+                    //             "color": "#244d4d"
+                    //         })
+                    //     })
+                    // }
+                    console.log(list[0].id)
+
+                    show_subset(list[0].id)
+                }
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+
+    }
+
+    let is_alter = false
+
+    window.onclick = function (e) { //关闭右键菜单
+        document.getElementById('menu').style.height = '0'
+    }
+</script>
+<script>
+    let tag = {
+        id: '',
+        name: ''
+    }
+
+    let parents = ''
+
+    function show_subset(id) {
+        if (parents !== '') {
+            $('#' + parents).css({
+                "background-color": "#244d4d",
+                "color": "wheat"
+            })
+        }
+        parents = id
+
+        if (id !== '') {
+            $('#' + id).css({
+                "background-color": "white",
+                "color": "#244d4d"
+            })
+        }
+
+        let list = document.getElementsByClassName('item-box')
+        // console.log(list)
+        for (let i = 0; i < list.length; i++) {
+            list.item(i).style.display = 'none'
+        }
+
+        list = document.getElementsByClassName(/^.*?-(\d+)$/.exec(id)[1])
+        // console.log(list)
+        for (let i = 0; i < list.length; i++) {
+            let item = list.item(i)
+            item.style.display = 'inline'
+        }
+    }
+</script>
+<script type="text/javascript">
+    function add_tag(id, type) {
+        let div = document.createElement('div')
+        div.setAttribute('class', 'tag-item-box')
+        let input = document.createElement('input')
+        input.setAttribute("type", "text");
+        div.appendChild(input)
+        document.getElementById(id).before(div)
+
+        input.focus()
+        input.addEventListener("blur", remove_if_empty)
+
+        function remove_if_empty() {
+            // console.log(input)
+            if (input.value === '') {
+                // console.log('remove')
+                div.remove()
+            } else {
+                // 插入，刷新
+                switch (type) {
+                    case 'topic': {
+                        insert_tag(0, '', input.value)
+                        break
+                    }
+                    case 'comp-parents': {
+                        insert_tag(1, '', input.value)
+                        break
+                    }
+                    case 'comp-son': {
+                        insert_tag(1, parents, input.value)
+                        break
+                    }
+                    case 'teach-parents': {
+                        insert_tag(2, '', input.value)
+                        break
+                    }
+                    case 'teach-son': {
+                        insert_tag(2, parents, input.value)
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+</script>
+
+<script>
+    function insert_tag(index, id, name) {
+        let url = get_url(index) + "/insert"
+        tag.name = name
+        tag_id = ''
+        if (id !== '')
+            tag.id = /^.*?-(\d+)$/.exec(id)[1]
+        console.log(url, tag)
+        update(url, tag)
+    }
+
+    function update_tag(index, id, name) {
+        delete tag.parents
+        let url = get_url(index) + "/update"
+        tag.name = name
+        tag.id = /^.*?-(\d+)$/.exec(id)[1]
+        console.log(url, tag)
+        update(url, tag)
+    }
+
+    function get_url(index) {
+        switch (index) {
+            case 0: {
+                return '/admin/tag/topic'
+            }
+            case 1: {
+                return '/admin/tag/comp'
+            }
+            case 2: {
+                return '/admin/tag/teach'
+            }
+        }
+    }
+
+    function get_index(id) {
+        if (id.startsWith('topic')) {
+            return 0
+        }
+        if (id.startsWith('comp')) {
+            return 1;
+        }
+        if (id.startsWith('teach')) {
+            return 2;
+        }
+    }
+</script>
+<script>
+    function update(url, data) {
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(data), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log(res)
+                if (res === 0) {
+                    alert('发生未知错误')
+
+                } else {
+                    select()
+                    alert('修改成功')
+                }
+            },
+            error: err => {
+                console.log(err)
+            }
+
+        })
+    }
+</script>
+</body>
+</html>

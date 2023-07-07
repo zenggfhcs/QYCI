@@ -1,0 +1,86 @@
+body {
+    background-color: #244d4d;
+    font-family: 等线, serif ;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+#main {
+    margin: 0 auto;
+    width: 50vw;
+    background-color: #506d6d;
+    border-radius: 1rem 1rem 0 0;
+}
+
+#main-comment {
+    margin: 1rem auto;
+    width: 40vw;
+    background-color: #506d6d;
+    border-radius: 0 0 1rem 1rem;
+}
+
+#title {
+    position: relative;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    margin: 3rem 0 1rem;
+    border-style: solid;
+    border-color: #aaa;
+    border-width: 0 0 1px 0;
+    padding: 1.5rem 4rem;
+}
+
+#publish-date-box {
+    font-size: 1rem;
+    COLOR: #244d4d;
+    position: absolute;
+    right: .5rem;
+    bottom: 2px;
+}
+
+#content {
+    padding: 0 0 5rem;
+    font-size: 1rem;
+    width: 40vw;
+    margin: 0 auto;
+    color: white;
+    line-height: 2rem;
+}
+
+
+#tags {
+    line-height: 2vh;
+    overflow: hidden;
+    position: absolute;
+    bottom: -3px;
+    left: 1rem;
+}
+
+#tag-box {
+    font-size: 0.8rem;
+}
+
+#tag-box ul {
+    list-style-type: none;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+#tag-box li {
+    color: #244d4d;
+    text-align: center;
+    margin: 0.5vh 0.2vw;
+    display: inline-block;
+    padding: 0 1vh;
+    border-radius: 1.5vh;
+    background-color: #ddd;
+}

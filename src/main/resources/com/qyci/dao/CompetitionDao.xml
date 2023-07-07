@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.CompetitionDao" >
+    <resultMap id="BaseResultMap" type="com.qyci.entity.Competition">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="organizer" jdbcType="VARCHAR" property="organizer"/>
+        <result column="co_organizer" jdbcType="VARCHAR" property="coOrganizer"/>
+        <result column="contact" jdbcType="VARCHAR" property="contact"/>
+        <result column="max_enroll_count" jdbcType="INTEGER" property="maxEnrollCount"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="enroll_start_time" jdbcType="TIMESTAMP" property="enrollStartTime"/>
+        <result column="enroll_end_time" jdbcType="TIMESTAMP" property="enrollEndTime"/>
+        <result column="act_start_time" jdbcType="TIMESTAMP" property="actStartTime"/>
+        <result column="act_end_time" jdbcType="TIMESTAMP" property="actEndTime"/>
+        <result column="topping" jdbcType="TINYINT" property="topping"/>
+        <result column="visible" jdbcType="BIT" property="visible"/>
+        <result column="review" jdbcType="BIT" property="review"/>
+        <result column="review_result" jdbcType="BIT" property="reviewResult"/>
+        <association property="from" javaType="com.qyci.entity.User" select="selectUserByKey" column="from">
+        </association>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.qyci.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="role" jdbcType="TINYINT" property="role" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="OTHER" property="sex" />
+        <result column="age" jdbcType="TINYINT" property="age" />
+        <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+        <result column="birthday" jdbcType="DATE" property="birthday" />
+        <result column="personal_introduction" jdbcType="VARCHAR" property="personalIntroduction" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `from`, `name`, organizer, co_organizer, contact, max_enroll_count, content,
+    publish_time, enroll_start_time, enroll_end_time, act_start_time, act_end_time, topping, 
+    `visible`, review, review_result
+    </sql>
+    <update id="updateByState">
+        update competition
+        <set>
+            <if test="review == true">
+                review = 1,
+            </if>
+            <if test="review == false">
+                review = 0,
+            </if>
+            <if test="reviewResult == true">
+                review_result = 1,
+            </if>
+            <if test="reviewResult == false">
+                review_result = 0,
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="disVisitById">
+        update competition
+        set visible = 0
+        where id = #{id}
+    </update>
+
+    <select id="selectUserByKey" resultMap="UserResultMap">
+        select
+            `id`, `password`, `role`, email, `name`, `sex`, `age`, `head_image`, `birthday`, `personal_introduction`
+        from user
+        where id = #{key}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.qyci.entity.Competition" useGeneratedKeys="true">
+        insert into competition(`from`, name, organizer, co_organizer, contact, max_enroll_count, content,
+                                publish_time, enroll_start_time, enroll_end_time, act_start_time, act_end_time, topping,
+                                visible, review, review_result)
+        values (#{from.id}, #{name}, #{organizer}, #{coOrganizer}, #{contact}, #{maxEnrollCount}, #{content},
+                now(), #{enrollStartTime}, #{enrollEndTime}, #{actStartTime}, #{actEndTime},
+                0, 1, 0, 0)
+    </insert>
+    <select id="selectByKeys" resultMap="BaseResultMap">
+        select
+        competition.id, `from`, competition.`name`, organizer, co_organizer, contact, max_enroll_count, content,
+        publish_time, enroll_start_time, enroll_end_time, act_start_time, act_end_time, topping,
+        `visible`, review, review_result
+        from competition
+        where `visible` = 1
+        and review = 1
+        and review_result = 1
+        <if test="ids.size() > 0">
+            and competition.`id` in
+            <foreach collection="list" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="ids.size() == 0">
+            and `visible` = 0
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+            competition.id, `from`, competition.`name`, organizer, co_organizer, contact, max_enroll_count, content,
+            publish_time, enroll_start_time, enroll_end_time, act_start_time, act_end_time, topping,
+            `visible`, review, review_result
+        from competition
+        where `visible` = 1
+          and competition.id = #{id}
+    </select>
+    <select id="selectFirst" resultMap="BaseResultMap">
+        select *
+        from competition
+        where `visible` = 1
+          and review = 1
+          and review_result = 1
+        order by topping desc
+        limit 6
+    </select>
+    <select id="selectByComp" resultMap="BaseResultMap">
+        select *
+        from competition
+        where visible = 1
+        and review = 1
+        and review_result = 1
+        and `from` = #{from.id}
+        <if test="review == true">
+            and review = 1
+        </if>
+        <if test="review == false">
+            and review = 0
+        </if>
+        <if test="reviewResult == true">
+            and review_result = 1
+        </if>
+        <if test="reviewResult == false">
+            and review_result = 0
+        </if>
+    </select>
+    <select id="selectAllByComp"  resultMap="BaseResultMap">
+        select *
+        from competition
+        where visible = 1
+          and review = 0
+          and review_result = 0
+    </select>
+    <select id="mgt_selectAll" resultMap="BaseResultMap">
+        select *
+        from competition
+        where visible = 1
+    </select>
+</mapper>

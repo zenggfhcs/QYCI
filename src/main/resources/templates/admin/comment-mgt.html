@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" data-th-href="@{/admin/right.css}">
+    <link rel="stylesheet" data-th-href="@{/admin/table.css}">
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+    <style>
+        #menu {
+            width: 5rem;
+            padding: 0;
+            height: 0;
+            position: absolute;
+            background-color: #244d4d;
+            overflow: hidden;
+            transition: all .3s;
+        }
+
+        #menu button {
+            height: 1.5rem;
+            width: 5rem;
+            border: 0;
+            color: #244d4d;
+            text-align: center;
+            background-color: wheat;
+        }
+
+        #menu button:hover {
+            background-color: #244d4d;
+            color: wheat;
+        }
+
+        .item * {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body onload="init()">
+<div id="right">
+    <div id="r-left">
+        <div class="type-box" id="tag-type-box">
+            <ul>
+                <li>
+                    <input type="radio" id="tag-teach" checked name="tag-info-type" onclick="set_type(0)">
+                    <label for="tag-teach">教学</label>
+                </li>
+                <li>
+                    <input type="radio" id="tag-topic" name="tag-info-type" onclick="set_type(1)">
+                    <label for="tag-topic">话题</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="r-main">
+        <div id="content-box" style="height: 50rem"></div>
+    </div>
+
+
+    <div id="menu">
+        <button id="delete">删除</button>
+    </div>
+</div>
+<script data-th-src="@{/tool.js}"></script>
+<script data-th-src="@{/jquery.js}"></script>
+<script>
+    let type = 0
+    let url = "/admin/comment-mgt/teach"
+
+    // 初始化函数
+    function init() {
+        select()
+
+    }
+
+    function set_type(type_value) {
+        type = type_value
+        switch (type) {
+            case 0: {
+                url = "/admin/comment-mgt/teach"
+                break;
+            }
+            case 1: {
+                url = "/admin/comment-mgt/topic"
+                break;
+            }
+        }
+        select()
+    }
+
+    function select() {
+        console.log("select")
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: '', // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            // dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log(res)
+                $("#content-box").html(res)
+                let items = document.getElementsByClassName('item')
+                for (let i = 0; i < items.length; i++) {
+                    items.item(i).addEventListener('contextmenu', (event) => {
+                        event.preventDefault()
+                        let menu = document.getElementById('menu'); //获取右键菜单
+                        menu.style.left = event.clientX + 'px'
+                        menu.style.top = event.clientY + 'px'
+                        menu.style.height = '1.5rem'
+                        comment.id = event.target.id
+                        event.stopPropagation()
+                    })
+                }
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+
+    }
+
+    window.onclick = function(e) { //关闭右键菜单
+        document.getElementById('menu').style.height = '0'
+    }
+
+    let comment = {
+        id: ''
+    }
+
+    $('#delete').click(() => {
+        switch_delete(comment.id)
+    })
+</script>
+<script>
+    function switch_delete(id) {
+        if (id.startsWith('teach-comment')) {
+            // 需要删除的评论的id
+            console.log(/^teach-comment(\d+)$/.exec(id)[1])
+            delete_comment(/^teach-comment(\d+)$/.exec(id)[1], '/admin/comment-mgt/teach/delete-comment')
+        }
+        else if (id.startsWith('topic-comment')) {
+            // 需要删除的评论的id
+            console.log(/^topic-comment(\d+)$/.exec(id)[1])
+            delete_comment(/^topic-comment(\d+)$/.exec(id)[1], '/admin/comment-mgt/topic/delete-comment')
+        }
+    }
+
+    function delete_comment(id, url) {
+        comment.id = id
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify(comment),
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                if (res === 0) {
+                    alert('发生位置错误')
+                }
+                else if (res === 1) {
+                    alert('删除成功')
+                    select()
+                }
+            },
+            error: err => {
+                console.log(err)
+            }
+        })
+    }
+</script>
+</body>
+</html>

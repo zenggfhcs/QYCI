@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content" data-th-fragment="content">
+    <div id="table-info">
+        <table>
+            <tbody>
+            <tr>
+                <th>id</th>
+                <th>head-image</th>
+                <th>name</th>
+                <th>describe</th>
+            </tr>
+            <tr class="item" data-th-each="user : ${userInfo}" data-th-id="${user.id}"
+                oncontextmenu="(event) => {
+                                show_list(event)
+                }"
+            >
+                <td data-th-text="${user.id}" data-th-title="${user.id}"></td>
+                <td>
+                    <img data-th-src="${user.headImage}" style="border-radius: 50%; width: 4rem; height: 4rem;" alt=""
+                         src="">
+                </td>
+                <td data-th-text="${user.name}" data-th-title="${user.name}"></td>
+                <td data-th-text="${user.personalIntroduction}" data-th-title="${user.personalIntroduction}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

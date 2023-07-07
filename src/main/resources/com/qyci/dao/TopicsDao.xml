@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.TopicsDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.Topics">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <association property="from" javaType="com.qyci.entity.User">
+            <id column="id" jdbcType="INTEGER" property="id" />
+            <result column="password" jdbcType="VARCHAR" property="password" />
+            <result column="role" jdbcType="TINYINT" property="role" />
+            <result column="email" jdbcType="VARCHAR" property="email" />
+            <result column="name" jdbcType="VARCHAR" property="name" />
+            <result column="sex" jdbcType="OTHER" property="sex" />
+            <result column="age" jdbcType="TINYINT" property="age" />
+            <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+            <result column="birthday" jdbcType="DATE" property="birthday" />
+            <result column="personal_introduction" jdbcType="VARCHAR" property="personalIntroduction" />
+        </association>
+        <collection property="tags" select="selectTagsByKey" column=""/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `from`, title, content, publish_time,`topping`, `visible`
+    </sql>
+    <update id="updateByState">
+        update topics
+        <set>
+            <if test="review == true">
+                review = 1,
+            </if>
+            <if test="review == false">
+                review = 0,
+            </if>
+            <if test="reviewResult == true">
+                review_result = 1,
+            </if>
+            <if test="reviewResult == false">
+                review_result = 0,
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="disVisitById">
+        update topics
+        set visible = 0
+        where id = #{id}
+    </update>
+    <select id="selectTagsByKey" resultMap="com.qyci.dao.TopicsTagDao.BaseResultMap">
+        select topics_tag.id,
+               topics_tag.name
+        from topics_tags_info,
+             topics_tag
+        where topics_tags_info.topics_info = #{key, jdbcType=INTEGER}
+          and topics_tags_info.tag_info = topics_tag.id
+    </select>
+
+    <select id="selectTop" resultMap="BaseResultMap">
+        select *
+        from topics
+        where visible = 1
+          and review = 1
+          and review_result = 1
+          and topping >= 0
+        order by topping desc
+        limit 7
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *
+        from topics
+        where visible = 1
+          and review = 1
+          and review_result = 1
+        order by publish_time desc
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select topics.id,
+               `from`,
+               title,
+               content,
+               publish_time,
+               `topping`,
+               `visible`,
+               user.`id`,
+               `role`,
+               email,
+               `name`,
+               `sex`,
+               `age`,
+               `head_image`,
+               `birthday`,
+               `personal_introduction`
+        from topics,
+             user
+        where topics.id = #{id}
+          and `from` = user.id
+    </select>
+    <select id="selectFirst" resultMap="BaseResultMap">
+        select *
+        from topics
+        where visible = 1
+          and review = 1
+          and review_result = 1
+        order by topping desc
+        limit 6
+    </select>
+    <select id="selectByTopic" resultMap="BaseResultMap">
+        select *
+        from topics
+        where visible = 1
+        and `from` = #{from.id}
+        <if test="review == true">
+            and review = 1
+        </if>
+        <if test="review == false">
+            and review = 0
+        </if>
+        <if test="reviewResult == true">
+            and review_result = 1
+        </if>
+        <if test="reviewResult == false">
+            and review_result = 0
+        </if>
+    </select>
+    <select id="selectAllByTopic" resultMap="BaseResultMap">
+        select *
+        from topics
+        where visible = 1
+          and review = 0
+          and review_result = 0
+    </select>
+    <select id="mgt_selectAll" resultMap="BaseResultMap">
+        select *
+        from topics
+        where visible = 1
+    </select>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.qyci.entity.Topics" useGeneratedKeys="true">
+        insert into topics (`from`, title, content,
+                            publish_time,`topping`, `visible`, review, review_result)
+        values (#{from.id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+                now(), 0, 1, 0, 0)
+    </insert>
+</mapper>

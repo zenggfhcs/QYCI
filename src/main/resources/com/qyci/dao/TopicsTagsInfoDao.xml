@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.TopicsTagsInfoDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.TopicsTagsInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="topics_info" jdbcType="INTEGER" property="topicsInfo"/>
+        <association column="tag_info" javaType="com.qyci.entity.TopicsTag" property="tagInfo">
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        `id`, `tag_info`, `topics_info`
+    </sql>
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into topics_tags_info(tag_info, topics_info)
+        values (#{tagInfo.id}, #{topicsInfo})
+    </insert>
+    <delete id="deleteById">
+        delete from topics_tags_info
+        where topics_info = #{id}
+    </delete>
+    <select id="selectByTopicsKey" resultMap="BaseResultMap">
+        select *
+        from topics_tag,
+             topics_tags_info
+        where topics_info = #{id}
+        and tag_info = topics_tag.id
+    </select>
+</mapper>

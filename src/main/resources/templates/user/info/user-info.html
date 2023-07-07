@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="">
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <link rel="stylesheet" data-th-href="@{/info/user-info.css}">
+    <link rel="stylesheet" data-th-href="@{/info/info-comp.css}">
+    <link rel="stylesheet" data-th-href="@{/content/author-box.css}">
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+</head>
+<body onload="init()">
+<th:block data-th-if="${user} != null">
+    <div id="author-info-box" data-th-object="${user}">
+        <img id="author-cover" data-th-src="*{headImage}" alt="1">
+        <div id="author-name" class="text-box">
+            <span data-th-text="*{name}"></span>
+        </div>
+        <div id="author-id" class="text-box">
+            <span data-th-text="*{id}"></span>
+        </div>
+        <div id="author-describe" class="text-box">
+            <span data-th-text="*{personalIntroduction}"></span>
+        </div>
+        <div style="position: absolute; bottom: .5rem; left: .5rem; color: #eee;">
+            <button onclick="login_exit()"
+                    style="
+                     border: 0;
+                     background: none;
+                     margin: 0;
+                     padding: 0;
+                     color: #244d4d;">exit
+            </button>
+        </div>
+        <div style="position: absolute; bottom: .5rem; right: .5rem; color: #eee;">
+            <a href="/user/info/info-alter" target="_blank">alter</a>
+        </div>
+
+    </div>
+</th:block>
+<div id="main">
+    <div id="main-content">
+        <div id="c-left">
+            <div id="type-box">
+                <ul>
+                    <li>
+                        <input type="radio" name="type" id="teach" checked onclick="set_type(0)">
+                        <label for="teach">教学</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="type" id="comp" onclick="set_type(1)">
+                        <label for="comp">竞赛</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="type" id="topic" onclick="set_type(2)">
+                        <label for="topic">话题</label>
+                    </li>
+                </ul>
+            </div>
+            <div style="height: 2rem;"></div>
+            <div id="state-box">
+                <ul>
+                    <li>
+                        <input type="radio" name="state" id="in-review" checked onclick="set_state(false, false)">
+                        <label for="in-review">审核中</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="state" id="passed" onclick="set_state(true, true)">
+                        <label for="passed">已通过</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="state" id="refused" onclick="set_state(true, false)">
+                        <label for="refused">已驳回</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="c-right">
+            <div id="content-box" data-th-fragment="content-box">
+            </div>
+        </div>
+    </div>
+</div>
+<script data-th-src="@{/jquery.js}"></script>
+<script data-th-src="@{/tool.js}"></script>
+<script>
+    let type = 0
+    let url = "/user/info/content-teach"
+    const state = {
+        review: false,
+        review_result: false
+    }
+
+    // 初始化函数
+    function init() {
+        if (check_login()) {
+            alert('请先登录')
+            window.open("/login/index", '_blank');
+        }
+        select()
+    }
+
+    function set_type(type_value) {
+        type = type_value
+        switch (type) {
+            case 0: {
+                url = "/user/info/content-teach"
+                break;
+            }
+            case 1: {
+                url = "/user/info/content-comp"
+                break;
+            }
+            case 2: {
+                url = "/user/info/content-topic"
+                break;
+            }
+        }
+        select()
+    }
+
+    function set_state(review, review_result) {
+        state.review = review
+        state.review_result = review_result
+        select()
+    }
+
+    function select() {
+        $.ajax({
+            url: url + '?review=' + state.review + "&reviewResult=" + state.review_result,
+            type: "GET",
+            data: '', // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: false,
+            // dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log(res)
+                $("#content-box").html(res)
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+
+    }
+
+    function login_exit() {
+        if (confirm('确定退出登录吗？') === false) {
+            return
+        }
+        $.ajax({
+            url: '/user/exit',
+            type: "POST",
+            data: '', // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: false,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                console.log(res)
+                if (res === 0) {
+                    alert("发生错误")
+                }
+                else {
+                    alert('已退出')
+                }
+                location.reload()
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+    }
+</script>
+</body>
+</html>

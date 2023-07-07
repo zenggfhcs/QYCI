@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content-box">
+    <div id="content" data-th-fragment="content">
+        <div class="list">
+            <ul>
+                <li data-th-each="comp : ${competitions}">
+                    <div class="item-box">
+                        <div class="item-main">
+                            <a style="display: flex" data-th-href="'/user/comp/comp-content/' + ${comp.id}" target="_blank">
+                                <div class="item-info" style="width: 40rem; margin-left: .5rem">
+                                    <div class="item-title" style="width: 38rem">
+                                        <span data-th-text="${comp.name}"></span>
+                                    </div>
+                                    <div class="item-describe" style="width: 40rem">
+                                        <span data-th-utext="${comp.content}"></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="item-operate">
+<!--                                <button>查看</button>-->
+                                <button>删除</button>
+<!--                                <button>修改</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

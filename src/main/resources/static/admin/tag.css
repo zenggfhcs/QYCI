@@ -1,0 +1,50 @@
+label {
+    user-select: none;
+}
+
+.tags-box {
+    color: white;
+    width: 43.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    margin: 1vw 0;
+    padding: 1rem 0.5vw;
+    border: 1px solid white;
+}
+
+.tag-item-box {
+    margin: .5rem;
+    border-radius: 5px;
+    position: relative;
+    height: 2rem;
+    min-width: 4rem;
+}
+
+.tag-item-box input {
+    text-align: center;
+    border: 0;
+    border-radius: 5px;
+    padding: 0 .5rem;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    color: wheat;
+    background: #244d4d;
+    outline: none;
+}
+
+.tag-item-box input:focus {
+    color: #244d4d;
+    background-color: white;
+}
+
+.tags-box button {
+    height: 2rem;
+    margin: .5rem;
+    border: 0;
+    border-radius: 5px;
+    width: 5rem;
+    font-size: 1.1rem;
+    background-color: wheat;
+    color: #244d4d;
+}

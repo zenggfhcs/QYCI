@@ -1,0 +1,193 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f6fbf8;
+    font-family: '等线', serif;
+}
+
+label {
+    user-select: none;
+}
+
+#main {
+    overflow: hidden;
+}
+
+#vs-content {
+    width: 45vw;
+    margin: 0 auto;
+}
+
+
+#tags-box {
+    padding: 1rem 0;
+    top: 9vh;
+    position: fixed;
+    left: 0;
+    width: 1vw;
+    height: 91vh;
+    background-color: #506D6D;
+    transition: all 0.5s;
+    overflow: hidden;
+}
+
+#tags-box:hover {
+    width: 18vw;
+}
+
+.tag-content {
+    margin: 0 1vw;
+    width: 16vw;
+}
+
+.tag-title {
+    font-size: 1.5rem;
+    line-height: 3rem;
+    color: white;
+    margin: 0 8px;
+    white-space: nowrap;
+}
+
+.tag-list-box {
+    height: 3rem;
+    line-height: 3rem;
+    overflow: hidden;
+}
+
+.tag-list-box ul {
+    font-size: 0;
+    list-style-type: none;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+.tag-list-box li {
+    font-size: 1rem;
+    text-align: center;
+    display: inline-block;
+}
+
+.tag-list-box input {
+    display: none;
+}
+
+.tag-list-box input:checked + label {
+    color: #244d4d;
+    background-color: white;
+}
+
+.tag-list-box label {
+    color: wheat;
+    background-color: #506d6d;
+    border-radius: 8px;
+    margin: 0 .5rem;
+    padding: .5rem;
+    transition: all .5s;
+}
+
+#vs-content ul {
+    margin: 0.7vh 0 0.5vh;
+    width: 45vw;
+    list-style-type: none;
+    padding: 0;
+}
+
+#vs-content li {
+    width: 45vw;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    border-width: 1px 0;
+    border-color: #244d4d;
+    border-style: solid;
+
+}
+
+.vs-item {
+    width: 45vw;
+    margin: 1vh auto;
+    background-color: #506D6D;
+    height: 17vh;
+    border-radius: 1vh;
+}
+
+.vs-info {
+    float: left;
+    padding: 0 0.5vw;
+}
+
+.vs-title {
+    margin-top: .5rem;
+    font-size: 1.5rem;
+    color: #ccc;
+    width: 45vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vs-title span {
+    margin-top: 0.5vh;
+    line-height: 4vh;
+    width: 100%;
+}
+
+.vs-info table {
+    font-size: 0.9rem;
+    color: #244d4d;
+    float: left;
+}
+
+.vs-info table tr {
+    height: 2vh;
+    line-height: 2.5vh;
+}
+
+.vs-info table td {
+    white-space: nowrap;
+    max-width: 24vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reg-box {
+    margin-top: 9vh;
+    margin-right: 1vw;
+    float: right;
+    text-align: right;
+}
+
+.registration {
+    border: 0;
+    border-radius: 0.3vh;
+    height: 5vh;
+    width: 6vw;
+    margin: 0 0 0.5vh;
+    font-size: 1.4rem;
+    background-color: #506D6D;
+    color: #244d4d;
+    transition: all 0.2s;
+}
+
+.registration:hover {
+    background-color: #244d4d;
+    color: #ff6f6f;
+    transition: all 0.2s;
+}
+
+.reg-box p {
+    line-height: 4vh;
+    color: #244d4d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.reg-box a {
+    text-decoration: none;
+    line-height: 2vh;
+    float: right;
+    font-size: 1rem;
+    color: #f28c8c;
+}

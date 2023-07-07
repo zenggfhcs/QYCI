@@ -1,0 +1,144 @@
+body {
+    background-color: #f6fbf8;
+    font-family: '等线', serif;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    margin-bottom: 1rem;
+}
+
+#top-topic-list,
+#all-topic-list {
+    margin: 1rem 0;
+    padding: 1rem 0 0;
+    border-color: white;
+    border-style: solid;
+    height: auto;
+    overflow: hidden;
+    transition: all 0.5s;
+}
+
+#top-topic-list {
+    border-width: 1px 0;
+}
+
+#all-topic-list {
+    border-width: 1px 0 0 0;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.community-box {
+    width: 60vw;
+    margin: 2vh auto 0;
+    padding-bottom: 2vh;
+}
+
+
+.topTopicBar, .normalTopicBar {
+    line-height: 5vh;
+    height: 5vh;
+    color: #244d4d;
+    font-size: 1.2rem;
+}
+
+.topTopicBar img, .normalTopicBar img {
+    width: 5vh;
+    height: 5vh;
+}
+
+.topTopicBarText, .normalTopicBarText {
+    width: 100%;
+    text-align: center;
+    color: white;
+    padding: 1vh;
+    font-size: 1.5rem;
+    display: inline-block;
+}
+
+.topTopic {
+    display: block;
+    margin: 0 auto;
+    height: 16vh;
+    width: 47vw;
+    background-color: #506D6D;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 10, 32, 0.1), 0 2px 8px rgba(0, 10, 32, 0.05);
+}
+
+.author {
+    width: 5vw;
+    margin: 2vh 2vh;
+    float: left;
+}
+
+.author img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 10, 32, 0.1);
+}
+
+.name {
+    padding-left: 0.5vw;
+    font-size: 0.8rem;
+    color: #909EAB;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.title-box {
+    height: 5vh;
+    line-height: 5vh;
+    margin: 0 1vw 0 0;
+    display: flex;
+    white-space: nowrap;
+}
+
+.title {
+    float: left;
+    padding: 0 0 0 1vh;
+    width: 36vw;
+}
+
+.title p {
+    color: wheat;
+    font-size: 1.3rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.info {
+    color: #244d4d;
+    padding: 0 1vw;
+    width: 45vw;
+    line-height: 3vh;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.data {
+    float: right;
+    white-space: nowrap;
+}
+
+.data p {
+    float: right;
+    color: #909EAB;
+    font-size: 1rem;
+}

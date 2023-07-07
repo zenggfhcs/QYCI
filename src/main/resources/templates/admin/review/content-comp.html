@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content" data-th-fragment="content">
+    <div class="list">
+        <ul>
+            <li data-th-each="comp : ${competitions}">
+                <div class="item-box">
+                    <div class="item-main">
+                        <a style="display: flex" data-th-href="'/user/comp/comp-content/' + ${comp.id}" target="_blank">
+                            <div class="item-info" style="width: 40rem; margin-left: .5rem">
+                                <div class="item-title" style="width: 38rem">
+                                    <span data-th-text="${comp.name}"></span>
+                                </div>
+                                <div class="item-describe" style="width: 40rem">
+                                    <div style="float: left">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td class="vs-info-name">主办方</td>
+                                                <td class="vs-info-content" data-th-text="${comp.organizer}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="vs-info-name">报名时间</td>
+                                                <td class="vs-info-content"
+                                                    data-th-text="${comp.enrollStartTime} + '~' + ${comp.enrollEndTime}"></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class="vs-info-name">比赛时间</td>
+                                                <td class="vs-info-content"
+                                                    data-th-text="${comp.actStartTime} + '~' + ${comp.actEndTime}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="item-operate">
+                            <button data-th-onclick="'passOrReject(' + ${comp.id} + ', true, true)'">通过</button>
+                            <button data-th-onclick="'passOrReject(' + ${comp.id} + ', true, false)'">驳回</button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+</body>
+</html>

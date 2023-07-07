@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录</title>
+
+    <link rel="icon" href="http://10.3.109.11/login-icon.png" sizes="16x16">
+    <link rel="stylesheet" type="text/css" data-th-href="@{/login-index.css}">
+
+    <script data-th-src="@{/jquery.js}"></script>
+</head>
+<body>
+<div class="back" id="back">
+    <div class="main-l">
+        <div class="main-s">
+            <div id="mask-l">
+                <div id="mask-s">
+                    <div id="login-back">
+                        <div id="login-top">
+                            <h1 class="card-title">Login</h1>
+                        </div>
+                        <!-- 放图标 -->
+                        <div id="icon">
+                            <a data-th-href="@{~/user/index}">
+                                <img src="http://10.3.109.11/logo-l.png" id="logo" alt="logo">
+                            </a>
+                        </div>
+
+                        <form data-th-name="login_form" data-th-object="${user}" data-th-onsubmit="return false"
+                              id="login-content" method="post">
+                            <table>
+                                <tbody>
+                                <tr class="input-group">
+                                    <td class="icon"><img src="http://10.3.109.11/user-name.png" class="input-icon"
+                                                          alt="icon">
+                                    </td>
+                                    <td class="input-content">
+                                        <div class="id-input">
+                                            <input type="number" required maxlength="10" data-th-name="userid"
+                                                   id="userid"
+                                                   data-th-field="*{id}"/>
+                                            <label>账号</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="input-group">
+                                    <td class="icon"><img src="http://10.3.109.11/user-pswd.png" class="input-icon"
+                                                          alt="icon">
+                                    </td>
+                                    <td class="input-content">
+                                        <div class="password-box">
+                                            <input type="password" required maxlength="16" data-th-name="password"
+                                                   id="password"
+                                                   data-th-field="*{password}"/>
+                                            <label>密码</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="input-group">
+                                    <td class="icon"><img src="http://10.3.109.11/user-pswd.png" class="input-icon"
+                                                          alt="icon">
+                                    </td>
+                                    <td class="input-content">
+                                        <div class="password-box">
+                                            <input type="password" id="checking"/>
+                                            <label>二次验证（没有请忽略）</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="login-box">
+                                <input type="submit" value="LET'S GO!" id="login" class="submit">
+                            </div>
+                        </form>
+                        <div class="other-choose">
+                            <a data-th-href="@{~/login/register}" style="margin-left: 5px; float: left" class="choose">No
+                                account?</a>
+                            <a data-th-href="@{~/login/forget}" style="margin-right: 5px; float: right;"
+                               class="choose">Forgot
+                                password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    let accept = true
+
+    $("#login").click(
+        function () {
+            if (!accept) {
+                return
+            }
+            accept = false
+            const user = {
+                id: $("#userid").val(),
+                password: $("#password").val()
+            }
+            console.log('user', user)
+            if (user.id === '' || user.id == null) {
+                return
+            }
+            $.ajax({
+                url: "/login/login",
+                type: "POST",
+                data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                async: true,
+                dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                success: res => {
+                    console.log('res', res)
+                    switch (res) {
+                        case -1: {// 不存在的用户
+                            alert('id 不存在')
+                            break
+                        }
+                        case 0: {// 密码错误
+                            alert('密码错误')
+                            break
+                        }
+                        case 7: {// 管理员
+                            alert('登录成功')
+                            window.location.href='/admin/index';
+                            break
+                        }
+                        case 17: {// 普通用户
+                            alert('登录成功，确定后该页面自动关闭，请返回页面后刷新')
+                            // window.location.href='/user/index';
+                            window.close()
+                            break
+                        }
+                    }
+                },
+                error: err => {
+                    console.log("err", err)
+                    alert("发生错误")
+                }
+            })
+            setTimeout(() => {
+                accept = true
+            }, 1000)
+        }
+    )
+    window.onunload = function () {
+        window.opener.location.reload();
+    }
+</script>
+</body>
+</html>

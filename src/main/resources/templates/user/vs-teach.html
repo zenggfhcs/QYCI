@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" data-th-href="@{/vs-teach.css}">
+    <link rel="stylesheet" data-th-href="@{/index.css}">
+    <link rel="stylesheet" data-th-href="@{/publish-enter.css}">
+    <title>教学</title>
+    <link rel="icon" href="http://10.3.109.11/main-icon.png" sizes="16x16">
+    <style>
+        #vs-teaching-page {
+            border-bottom-width: 3px;
+            border-bottom-color: khaki;
+            border-style: solid;
+            padding-bottom: 3px;
+        }
+    </style>
+    <script>
+        let parent_id = ''
+        let tag_id = ''
+    </script>
+</head>
+<body onload="init()">
+<div id="main">
+    <div id="top-tools">
+        <div id="top-tools-content">
+            <!-- left -->
+            <div id="head-logo">
+                <a data-th-href="@{~/user/index}">
+                    <img id="head-logo-img" src="http://10.3.109.11/logo.png" alt="启扬赛讯">
+                </a>
+            </div>
+            <div id="head-link-box">
+                <ul>
+                    <li id="home-page" class="head-link-item">
+                        <a data-th-href="@{/user/index}" data-th-text="首页"></a>
+                    </li>
+                    <li id="vs-teaching-page" class="head-link-item">
+                        <a data-th-href="@{/user/vs-teach}" data-th-text="竞赛教学"></a>
+                    </li>
+                    <li id="vs-page" class="head-link-item">
+                        <a data-th-href="@{/user/vs}" data-th-text="竞赛资讯"></a>
+                    </li>
+                    <li id="com-page" class="head-link-item">
+                        <a data-th-href="@{/user/community}" data-th-text="社区"></a>
+                    </li>
+                </ul>
+            </div>
+            <div data-th-style="${user} != null ? 'display: none' : 'display: block'">
+                <div class="reg-login-box"><a data-th-href="@{~/login/index}" target="_blank">登录</a></div>
+                <div class="reg-login-box">&nbsp;|&nbsp;</div>
+                <div class="reg-login-box"><a data-th-href="@{~/login/register}" target="_blank">注册</a></div>
+            </div>
+            <div data-th-style="${user} == null ? 'display: none' : 'display: block'">
+                <th:block th:if="${user} != null">
+                    <img id="user-h-image" data-th-src="${user.getHeadImage()}"
+                         data-th-alt="${user.getName()}" onclick="window.open('/user/info', '_blank')" src="" alt=""/>
+                </th:block>
+            </div>
+
+            <div id="publish-box">
+                <div class="publish-item">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/publish-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/publish-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>发布</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(0)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/video-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/video-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>教学</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(1)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/vs-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/vs-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>竞赛</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(2)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/article-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/article-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>话题</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="width: 1vw; height: 1vh; float: right"></div>
+    </div>
+</div>
+<div style="height: 9vh"></div>
+
+<div id="tags-box">
+    <div class="tag-content">
+        <div class="tag-title">
+            Ⅰ
+        </div>
+        <div class="tag-list-box">
+            <ul class="tag-list-ul">
+                <li data-th-each="parent:${parents}">
+                    <input type="radio" class="parent-item"
+                           data-th-onclick="'switch_choose_p(\'' + ${parent.id} + '\')'"
+                           name="parents" value="" data-th-id="'parent' + ${parent.id}"/>
+                    <label data-th-for="'parent' + ${parent.id}" data-th-text="${parent.name}"></label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="tag-content">
+        <div class="tag-title">
+            Ⅱ
+        </div>
+        <div class="tag-list-box">
+            <ul class="tag-list-ul">
+                <li data-th-each="tag:${tags}">
+                    <input type="radio" class="tag-input-item"
+                           data-th-onclick="'switch_choose_g(\'' + ${tag.id} + '\')'"
+                           data-th-name="${tag.parents}" value="" data-th-id="'tag' + ${tag.id}"/>
+                    <label data-th-for="'tag' + ${tag.id}" data-th-class="${tag.parents} + ' tag-item'"
+                           data-th-text="${tag.name}"></label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="main-box">
+    <!-- 竞赛教学 -->
+    <div class="contest-box">
+        <!-- 竞赛教学内容 -->
+        <div th:id="content" th:fragment="content">
+            <div class="container" data-th-if="${teaches ne null}">
+                <a data-th-each="teach : ${teaches}" target="_blank"
+                   data-th-href="@{'/user/vs/vs-content/' + ${teach.getId()}}" class="contest">
+                    <!-- 竞赛教学图片 -->
+                    <img data-th-src="${teach.getCover()}" alt="" src="">
+                    <!-- 竞赛教学名字 -->
+                    <div class="title">
+                        <span data-th-text="${teach.getTitle()}"></span>
+                    </div>
+                    <!-- 竞赛教学主办方 -->
+                    <div class="sponsor">
+                        <span data-th-text="${teach.getFrom().getName()}"></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script data-th-src="@{/tool.js}"></script>
+<script type="text/javascript">
+
+    const pages = ['teach', 'comp', 'topic']
+    function publish(index) {
+        const bool = check_login()
+        if (bool) {
+            alert('未登录')
+            return
+        }
+        const url = '/user/publish/' + pages[index]
+        window.open(url, '_blank')
+    }
+</script>
+<script data-th-src="@{/jquery.js}"></script>
+<script type="text/javascript">
+    function select() {
+        $.ajax({
+            url: "/user/vs-teach/teach?id=" + tag_id + "&parents=" + parent_id,
+            type: "GET",
+            async: true,
+            // dataType: 'text',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                // console.log('res', res)
+                $('#content').html(res)
+            },
+            error: err => {
+                console.log("err", err)
+            }
+        })
+    }
+
+    function init() {
+        $("#101").css({
+            "background-color": "#909EAB",
+            "color": "white"
+        })
+
+        $("#201").css({
+            "background-color": "#909EAB",
+            "color": "white"
+        })
+
+        let list = document.querySelectorAll('.tag-list-ul')
+        for (let i = 0; i < list.length; i++) {
+            list[i].addEventListener('wheel', (event) => {
+                event.preventDefault()
+                list[i].scrollLeft += event.deltaY / 2
+            })
+        }
+        select()
+    }
+
+
+    function switch_choose_p(id) {
+        console.log('p', parent_id, 'id', id)
+        let list;
+        if (id === parent_id) {// 再次点击取消
+            let item = document.getElementById('parent' + id)
+            item.checked = false
+            list = document.getElementsByClassName('tag-item')
+            for (let i = 0; i < list.length; i++) {
+                list.item(i).style.display = "inline"
+            }
+            parent_id = ''
+            tag_id = ''
+            select()
+        }
+        else {
+            if (parent_id !== '') {
+                tag_id = '' // 清除原有选项
+            }
+            list = document.getElementsByClassName(parent_id === '' ? 'tag-item' : parent_id)
+            for (let i = 0; i < list.length; i++) {
+                list.item(i).style.display = "none"
+            }
+
+            list = document.getElementsByClassName(id)
+            for (let i = 0; i < list.length; i++) {
+                list.item(i).style.display = "inline"
+            }
+            parent_id = id
+            select()
+        }
+    }
+
+    function switch_choose_g(id) {
+        // console.log(id)
+        if (id === '') { // 没有点击过
+            return
+        }
+        if (tag_id === id) { // 取消点击
+            let item = document.getElementById('tag' + id)
+            item.checked = false
+            tag_id = ''
+            select()
+            return
+        }
+        tag_id = id // 点击
+        let item = document.getElementById('tag' + id)
+        if (parent_id === item.name) {
+            select()
+        } else {
+            // 选中父类别
+            let parent = document.getElementById('parent' + item.name)
+            parent.checked = true
+            switch_choose_p(item.name)
+        }
+    }
+</script>
+</body>
+</html>

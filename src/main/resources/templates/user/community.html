@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" data-th-href="@{/community.css}">
+    <link rel="stylesheet" data-th-href="@{/index.css}">
+    <link rel="stylesheet" data-th-href="@{/publish-enter.css}">
+    <title>社区</title>
+    <link rel="icon" href="http://10.3.109.11/main-icon.png" sizes="16x16">
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+    <style>
+        #com-page {
+            border-bottom-width: 3px;
+            border-bottom-color: khaki;
+            border-style: solid;
+            padding-bottom: 3px;
+        }
+    </style>
+</head>
+<body onload="init()">
+<div id="main">
+    <div id="top-tools">
+        <div id="top-tools-content">
+            <!-- left -->
+            <div id="head-logo">
+                <a data-th-href="@{~/user/index}">
+                    <img id="head-logo-img" src="http://10.3.109.11/logo.png" alt="启扬赛讯">
+                </a>
+            </div>
+            <div id="head-link-box">
+                <ul>
+                    <li id="home-page" class="head-link-item">
+                        <a data-th-href="@{/user/index}" data-th-text="首页"></a>
+                    </li>
+                    <li id="vs-teaching-page" class="head-link-item">
+                        <a data-th-href="@{/user/vs-teach}" data-th-text="竞赛教学"></a>
+                    </li>
+                    <li id="vs-page" class="head-link-item">
+                        <a data-th-href="@{/user/vs}" data-th-text="竞赛资讯"></a>
+                    </li>
+                    <li id="com-page" class="head-link-item">
+                        <a data-th-href="@{/user/community}" data-th-text="社区"></a>
+                    </li>
+                </ul>
+            </div>
+            <div data-th-style="${user} != null ? 'display: none' : 'display: block'">
+                <div class="reg-login-box"><a data-th-href="@{~/login/index}" target="_blank">登录</a></div>
+                <div class="reg-login-box">&nbsp;|&nbsp;</div>
+                <div class="reg-login-box"><a data-th-href="@{~/login/register}" target="_blank">注册</a></div>
+            </div>
+            <div data-th-style="${user} == null ? 'display: none' : 'display: block'">
+                <th:block th:if="${user} != null">
+                    <img id="user-h-image" data-th-src="${user.getHeadImage()}"
+                         data-th-alt="${user.getName()}" onclick="window.open('/user/info', '_blank')" src="" alt=""/>
+                </th:block>
+            </div>
+
+            <div id="publish-box">
+                <div class="publish-item">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/publish-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/publish-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>发布</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(0)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/video-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/video-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>教学</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(1)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/vs-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/vs-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>竞赛</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(2)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/article-default.png" alt="" class="item-default" />
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/article-selected.png" alt="" class="item-selected" />
+                    </div>
+                    <div class="publish-type-name">
+                        <p>话题</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height: 9vh"></div>
+
+<div class="community-box">
+    <div class="normalTopicList">
+        <div class="topTopicBar">
+            <span class="topTopicBarText" onclick="change_height()">置顶话题</span>
+        </div>
+        <ul id="top-topic-list">
+            <li data-th-each="topic : ${topTopics}">
+                <a data-th-href="@{'/user/com/topic-content/' + ${topic.getId()}}" target="_blank" class="topTopic">
+                    <div class="title-box">
+                        <div class="title">
+                            <p data-th-text="${topic.title}"></p>
+                        </div>
+                        <div class="data">
+                            <p data-th-text="${topic.publishTime}"></p>
+                        </div>
+                    </div>
+
+                    <div class="info" data-th-utext="${topic.content}">
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="normalTopicList">
+        <div class="normalTopicBar">
+            <span class="normalTopicBarText">全部话题</span>
+        </div>
+        <ul id="all-topic-list">
+            <li data-th-each="topic : ${allTopics}">
+                <a data-th-href="@{'/user/com/topic-content/' + ${topic.getId()}}" target="_blank" class="topTopic">
+                    <div class="title-box">
+                        <div class="title">
+                            <p data-th-text="${topic.title}"></p>
+                        </div>
+                        <div class="data">
+                            <p data-th-text="${topic.publishTime}"></p>
+                        </div>
+                    </div>
+
+                    <div class="info" data-th-utext="${topic.content}"></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script data-th-src="@{/tool.js}"></script>
+<script type="text/javascript">
+
+    const pages = ['teach', 'comp', 'topic']
+    function publish(index) {
+        const bool = check_login()
+        if (bool) {
+            alert('未登录')
+            return
+        }
+        const url = '/user/publish/' + pages[index]
+        window.open(url, '_blank')
+    }
+</script>
+<script data-th-src="@{/jquery.js}"></script>
+<script type="text/javascript">
+    function init() {
+        const top_list = document.getElementById('top-topic-list')
+        weight = top_list.offsetHeight - 32
+    }
+
+    let open = true
+    let weight = 0
+
+    function change_height() {
+        open = !open
+        if (open) {
+            $('#top-topic-list').css({
+                "height": weight,
+                "padding": "1rem"
+            })
+        } else {
+            $('#top-topic-list').css({
+                "height": "0",
+                "padding": "0"
+            })
+        }
+    }
+</script>
+</body>
+</html>

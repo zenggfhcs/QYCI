@@ -1,0 +1,134 @@
+body {
+	margin: 0;
+	font-family: 等线, serif ;
+}
+
+a {
+	text-decoration: none;
+}
+
+p {
+	margin: 0;
+	padding: 0;
+}
+
+#content-box {
+	width: 48rem;
+	/* height: 100vh; */
+	overflow: hidden;
+	background-color: #506d6d;
+}
+
+#content {
+	width: 46rem;
+	padding: 0 2rem;
+	height: 99%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.list {
+	padding: 0 1rem;
+	/* padding: 1rem; */
+	width: 42rem;
+}
+
+.list ul {
+	padding: 0;
+	list-style-type: none;
+}
+
+.list li {
+	margin: 1rem 0;
+	height: 10rem;
+}
+
+.item-box {
+	overflow: hidden;
+	width: 42rem;
+	height: 10rem;
+	background: #244d4d;
+	border-radius: .5rem;
+}
+
+
+
+
+/* 教学 */
+.item-main {
+	display: flex;
+	position: relative;
+	height: 10rem;
+}
+
+.item-main img {
+	margin: .5rem;
+	height: 9rem;
+	width: 13rem;
+	border-radius: .5rem 0 0 .5rem;
+}
+
+.item-info {
+	width: 27.5rem;
+	overflow: hidden;
+	/* display: flex; */
+	/* flex-direction: column; */
+}
+
+.item-title {
+	width: 26rem;
+	font-size: 1.3rem;
+	line-height: 3rem;
+	white-space: nowrap;
+	 color: white;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+}
+
+.item-describe {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	word-break: break-all;
+	word-wrap: break-word;
+	line-height: 2rem;
+	width: 26rem;
+	color: #506D6D;
+}
+
+.item-operate {
+	/* margin: auto 0; */
+	height: 0;
+	position: absolute;
+	overflow: hidden;
+	right: 0;
+	/* top: 2rem; */
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	width: 1rem;
+	padding: 1rem 0;
+	transition: all .5s;
+	background-color: #406D6D;
+	border-radius: .5rem;
+}
+
+/*  */
+.item-operate:hover {
+	width: 6rem;
+	height: 8rem;
+}
+
+.item-operate button {
+	white-space: nowrap;
+    background: none;
+    margin: .5rem 1rem;
+}
+
+.item-operate button:hover {
+	background-color: #506d6d;
+	color: white;
+}

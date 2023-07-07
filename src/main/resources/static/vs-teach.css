@@ -1,0 +1,179 @@
+label {
+    user-select: none;
+}
+
+#tags-box {
+    padding: 1rem 0;
+    top: 9vh;
+    position: fixed;
+    left: 0;
+    width: 1vw;
+    height: 91vh;
+    background-color: #506D6D;
+    transition: all 0.5s;
+    overflow: hidden;
+}
+
+#tags-box:hover {
+    width: 18vw;
+}
+
+.tag-content {
+    margin: 0 1vw;
+    width: 16vw;
+}
+
+.tag-title {
+    font-size: 1.5rem;
+    line-height: 3rem;
+    color: white;
+    margin: 0 8px;
+    white-space: nowrap;
+}
+
+.tag-list-box {
+    height: 3rem;
+    line-height: 3rem;
+    overflow: hidden;
+}
+
+.tag-list-box ul {
+    font-size: 0;
+    list-style-type: none;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+.tag-list-box li {
+    font-size: 1rem;
+    text-align: center;
+    display: inline-block;
+}
+
+.tag-list-box input {
+    display: none;
+}
+
+.tag-list-box input:checked + label {
+    color: #244d4d;
+    background-color: white;
+}
+
+.tag-list-box label {
+    color: wheat;
+    background-color: #506d6d;
+    border-radius: 8px;
+    margin: 0 .5rem;
+    padding: .5rem;
+    transition: all .5s;
+}
+
+.contest-box {
+    width: 57vw;
+    margin: 0 auto;
+}
+
+.container {
+    border-radius: .5rem;
+    background-color: #506d6d;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.contest, .activity {
+    width: 19vw;
+    /*margin-bottom: 2vh;*/
+}
+
+
+.contest img, .activity img {
+    margin: 1vh 1vw;
+    width: 17vw;
+    height: 25vh;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.contest img:hover {
+    margin: 0;
+    width: 19vw;
+    height: 27vh;
+    transition: all 0.2s;
+}
+
+.title {
+    width: 17vw;
+    /*color: #31363F;*/
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+}
+
+.title, .sponsor {
+    margin-left: 1vw;
+    transition: all 0.2s;
+}
+
+.contest img:hover + .title,
+.contest img:hover + .title + .sponsor {
+    margin-left: 0;
+    transition: all 0.2s;
+}
+
+
+.title span {
+    display: inline-block;
+    width: 16.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sponsor {
+    color: #909EAB;
+    font-size: 0.8rem;
+    line-height: 1rem;
+}
+
+.sponsor span {
+    display: inline-block;
+    width: 8.5vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.tag-item-box {
+    border-radius: 5px;
+    position: relative;
+    margin: 8px .5rem;
+    line-height: 2rem;
+    min-width: 4rem;
+    height: 2rem;
+    background: #506d6d;
+}
+
+.tag-item-box label {
+    border-radius: 5px;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0 .5rem;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    color: wheat;
+}
+
+.tag-item-box input {
+    display: none;
+}
+
+.tag-item-box input:checked + label {
+    border: 1px white solid;
+    color: #244d4d;
+    background-color: white;
+}

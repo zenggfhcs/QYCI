@@ -1,0 +1,383 @@
+.select-radio {
+    /* display: none; */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #244d4d;
+}
+
+table {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 40vw;
+}
+
+table tr {
+    width: 40vw;
+}
+
+table td {
+    width: 40vw;
+    margin: 1rem 0;
+}
+
+#back {
+    /* width: 100vw; */
+    /* height: 100vh; */
+}
+
+/* 顶部显示标题 */
+.top {
+    height: 7vh;
+    text-align: center;
+}
+
+.top-title-box {
+    margin-top: 5vh;
+    height: 5vh;
+    text-align: center;
+    border-bottom: 2px solid white;
+}
+
+.top-title-line {
+    display: inline-block;
+    width: 100px;
+    height: 1px;
+    background-color: #dedede;
+    margin-bottom: 5px;
+}
+
+.top-title {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin: 0 25px;
+    font-weight: 600;
+}
+
+/* 活动名称 */
+.model {
+    margin-top: 30px;
+}
+
+#contest {
+}
+
+.content-title-box {
+    border-radius: 5px;
+    line-height: 3rem;
+    font-size: 1.3rem;
+    min-width: 6rem;
+    color: #e7e5e5;
+    margin: 0 1rem;
+}
+
+.content-input-box {
+}
+
+/* input-text样式 */
+::-webkit-input-placeholder {
+    color: #ada9a9;
+}
+
+.content-input-text {
+    border: none;
+    background: #506d6d;
+    border-radius: 5px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    font-size: 1rem;
+    line-height: inherit;
+    padding: 0 15px;
+    height: 48px;
+    color: #e7e5e5;
+    width: 40vw;
+}
+
+.content-input-text:focus {
+    outline: none;
+    border: 1px solid #8dc2ec;
+}
+
+/* 报名时间 */
+#enroll-date-input {
+    float: left;
+}
+
+#enroll-date-line {
+    float: left;
+    margin: 0px 10px 0px 10px;
+    color: #ffffff;
+}
+
+.date {
+    border: none;
+    background: #506d6d;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    line-height: inherit;
+    padding: 0 15px;
+    height: 48px;
+    color: #e7e5e5;
+    text-align: center;
+    position: relative;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    width: 16vw;
+}
+
+.date::-webkit-calendar-picker-indicator {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    padding-left: calc(100% - 40px);
+    padding-right: 10px;
+    background: transparent;
+}
+
+/* 活动时间 */
+#contest-date {
+    margin-top: 80px;
+}
+
+#contest-date-input {
+    float: left;
+}
+
+#contest-date-line {
+    float: left;
+    margin: 0px 10px 0px 10px;
+    color: #ffffff;
+}
+
+/* 选择地区 */
+#area-date-title {
+    float: left;
+    margin-right: 30px;
+}
+
+#area-date {
+    margin-top: 80px;
+}
+
+/* 活动费用和人数 */
+#contest-cost-title {
+    float: left;
+    margin-right: 30px;
+}
+
+#contest-cost {
+    margin-top: 80px;
+}
+
+#Number-title {
+    float: left;
+    margin-right: 30px;
+}
+
+/* 活动分类 */
+#contest-classify-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0 0 0 -10px;
+    padding-bottom: 14px;
+}
+
+#contest-classify-input span {
+    float: left;
+    background: #ada9a9;
+    width: 106px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border: 1px dashed #d2d2d2;
+    margin: 0 0 10px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#contest-classify-input span:hover {
+    background: #dbd6d6;
+}
+
+/* 富文本 */
+/* 上传图片 */
+#upload-picture {
+    display: none;
+}
+
+#upload-picture-label {
+    display: block;
+    width: 65px;
+    margin-top: 3vh;
+    padding: 6px 25px;
+    background: #00bfff;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+#picture-note {
+    margin-top: 3vh;
+    height: 100px;
+    width: 300px;
+    color: #ada9a9;
+}
+
+.picture-box {
+    height: 300px;
+    width: 40vw;
+    float: left;
+    text-align: center;
+    border: 10px solid rgb(212, 50, 50);
+}
+
+.picture-box img {
+    width: 40vw;
+    height: 300px;
+}
+
+/* 信息配置 */
+#enroll-System-title {
+    float: left;
+    margin-right: 30px;
+}
+
+#charge-System-title {
+    float: left;
+    margin-right: 30px;
+}
+
+#configuration-cancel-enroll-title {
+    float: left;
+    margin-right: 30px;
+
+}
+
+#configuration-modify-information-title {
+    float: left;
+    margin-right: 30px;
+}
+
+/* 参赛选手信息 */
+#information-select {
+    width: 30vw;
+    height: 20vh;
+    border: 1px solid seashell;
+    position: relative;
+    overflow: hidden;
+    margin: 30px 0 0 -10px;
+    padding-bottom: 14px;
+}
+
+#information-select label {
+    float: left;
+    background: #ada9a9;
+    color: #000000;
+    width: 106px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border: 1px dashed #d2d2d2;
+    margin: 10px 10px 10px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#information-select label:hover {
+    background: #dbd6d6;
+}
+
+/* 提交 */
+#submit {
+    width: 210px;
+    height: 50px;
+    border-radius: 8px;
+    background: #22bfa7;
+    color: #fff;
+    border: 0;
+    margin-top: 2rem;
+    cursor: pointer;
+}
+
+#submit:hover {
+    background: #76a949;
+}
+
+#submit:active {
+    background: #438966;
+}
+
+.time-content-box {
+    display: flex;
+    background-color: #506d6d;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.time-content-title {
+    font-size: 1rem;
+    text-align: center;
+    line-height: 3rem;
+    border-radius: 5px;
+    padding-left: 32px;
+    color: #aaa;
+}
+
+#vs-classify-box {
+    height: 3rem;
+    overflow: hidden;
+}
+
+#tags-box {
+    color: white;
+    width: 40vw;
+    display: flex;
+    border-radius: 8px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    line-height: 3rem;
+    white-space: nowrap;
+}
+
+#tags-box li {
+    padding: 0;
+    margin: 0;
+}
+
+.tag-item-box {
+    border-radius: 5px;
+    position: relative;
+    margin: 8px .5rem;
+    line-height: 2rem;
+    min-width: 4rem;
+    height: 2rem;
+    background: #506d6d;
+}
+
+.tag-item-box label {
+    border-radius: 5px;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0 .8rem;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    color: wheat;
+}
+
+.tag-item-box input {
+    display: none;
+}
+
+.tag-item-box input:checked + label {
+    border: 1px white solid;
+    color: #244d4d;
+    background-color: white;
+}

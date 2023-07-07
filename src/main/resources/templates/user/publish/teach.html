@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布教学</title>
+    <link rel="stylesheet" data-th-href="@{/publish/teach.css}">
+    <link rel="stylesheet" data-th-href="@{/editor/main/froala_editor.css}">
+    <script type="text/javascript" data-th-src="@{/editor/main/comment_editor.js}"></script>
+</head>
+<body onload="init()">
+<div id="publish-video-box">
+    <div id="publish-video-main">
+        <form id="form" action="#" onsubmit="return false" enctype="multipart/form-data"></form>
+        <div class="top-title">
+            <p>资源上传</p>
+        </div>
+        <div id="upload-box">
+            <div id="video-cover-box">
+                <div id="cover-img-box">
+                    <div style="position: relative;height: 150px;width: 200px;">
+                        <input type="file" accept=".png,.jpg,.gif" id="cover-input"/>
+                        <img src="http://10.3.109.11/upload.png" id="tip-cover-img" alt="">
+                    </div>
+                    <div style="height: 2rem; padding: 2px 52px 0;">
+                        <button id="cover-upload-btn">上传封面</button>
+                    </div>
+                </div>
+            </div>
+            <div id="video-upload-box">
+                <div id="upload-icon">
+                    <img src="http://10.3.109.11/upload.png" alt="">
+                </div>
+                <div id="upload-btn-box">
+                    <input type="file" accept=".mp4" id="video-input"/>
+                    <button id="video-upload-btn">上传视频</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="top-title">
+            <p>教学标题</p>
+        </div>
+        <label for="title-textarea"></label><input type="text" id="title-textarea" onchange="upload_title()"
+                                                   placeholder="title"/>
+
+        <div class="top-title">
+            <p>教学描述</p>
+        </div>
+        <div id="my_editor"></div>
+
+        <div class="top-title">
+            <p>教学标签</p>
+        </div>
+        <div id="tags-box">
+            <div class="tag-item-box" data-th-each="tag : ${tags}">
+                <input type="radio" name="tags" value="" data-th-id="'tag' + ${tag.id}" onclick="upload_tag(this.id)"/>
+                <label data-th-for="'tag' + ${tag.id}" data-th-text="${tag.name}"></label>
+            </div>
+
+        </div>
+
+        <div id="top-box">
+            <button id="submit_button" onclick="submit()">
+                发布
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+<script data-th-src="@{/jquery.js}"></script>
+<script>
+    function init() {
+        const cover = document.getElementById('cover-input')
+        cover.addEventListener('change', upload_cover)
+
+        const video = document.getElementById('video-input')
+        video.addEventListener('change', upload_video)
+
+        let list = document.querySelectorAll('#tags-box')
+        for (let i = 0; i < list.length; i++) {
+            list[i].addEventListener('wheel', (event) => {
+                event.preventDefault()
+                list[i].scrollLeft += event.deltaY / 2
+            })
+        }
+    }
+
+    const teach = {
+        cover: '',
+        link: '',
+        title: '',
+        synopsis: '',
+    }
+
+    function upload_cover(event) {
+        console.log(event)
+        const file = event.target.files[0];
+        console.log(file)
+        let form = new FormData()
+        form.append("file", file)
+        const cover = upload(form)
+        teach.cover = cover
+
+        let img_url = URL.createObjectURL(file);
+        document.getElementById("tip-cover-img").src = img_url
+        setTimeout(() => {
+
+            $('#tip-cover-img').css({
+                "height": "150px",
+                "width": "200px",
+                "margin": "0",
+            })
+        }, 300)
+    }
+
+    function upload(form) {
+        let link = ''
+        $.ajax({
+            url: "/send/comment_upload_file",
+            type: "POST",
+            data: form, // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: false,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: false, // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                link = res.link
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+        return link
+    }
+
+    function upload_video(event) {
+        console.log(event)
+        const file = event.target.files[0];
+        console.log(file)
+        let form = new FormData()
+        form.append("file", file)
+        const link = upload(form)
+        teach.link = link
+        $('#video-upload-btn').html('更改视频')
+    }
+
+    function upload_title() {
+        let title = $('#title-textarea').val()
+        console.log(title)
+        teach.title = title
+    }
+
+    let tag_id = ''
+
+    function upload_tag(id) {
+        tag_id = id
+    }
+
+    function submit() {
+        let content = editor.html.get()
+        teach.synopsis = content
+
+        if (teach.cover === '') {
+            alert("请先上传封面")
+            return
+        }
+        if (teach.link === '') {
+            alert("请先上传视频")
+            return
+        }
+        if (teach.title === '') {
+            alert("标题不能为空")
+            return
+        }
+        if (teach.synopsis.length === 0) {
+            alert("描述为空")
+            return
+        }
+        if (tag_id === '') {
+            alert("标签未选择")
+            return
+        }
+        console.log(teach)
+
+        $.ajax({
+            url: '/user/publish/teach/publish',
+            type: 'POST',
+            data: JSON.stringify(teach), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                if (res === -1) {
+                    if (confirm('未登录，是否前去登录') === true) {
+                        window.open('/login/index', '_blank')
+                    }
+                    return
+                }
+                if (res === 0) {
+                    alert('发布错误')
+                    return
+                }
+                const tag = {
+                    tagInfo: {
+                        id: /^tag(\d+)$/.exec(tag_id)[1]
+                    },
+                    teachInfo: res
+                }
+                console.log(tag)
+                $.ajax({
+                    url: '/user/publish/teach/publish-tag',
+                    type: 'POST',
+                    data: JSON.stringify(tag), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                    success: res => {
+                        if (res === 0) {
+                            alert('分类添加失败')
+                            // 发生错误
+                        }
+                        else {
+                            alert('发布成功')
+                            window.close()
+                        }
+                    },
+                    error: err => {
+                        console.log('err', err)
+                    }
+                })
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+    }
+</script>
+<script>
+    let editor = new FroalaEditor('#my_editor', {
+        // 工具栏在底部
+        toolbarBottom: true,
+        //
+        toolbarButtons: {
+            'moreText': {
+                'buttons': []
+            },
+            'moreParagraph': {
+                'buttons': []
+            },
+            'moreRich': {
+                'buttons': ['emoticons']
+            },
+            'moreMisc': {
+                'buttons': [],
+                'align': 'right',
+                'buttonsVisible': 2
+            }
+        },
+        attribution: false,
+        // pluginsEnabled: ['quote', 'image', 'align', 'emoticons', 'markdown', 'specialCharacters', 'lineHeight', 'table'],
+        pluginsEnabled: ['emoticons'],
+    });
+</script>
+</html>

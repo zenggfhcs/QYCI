@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content" data-th-fragment="content">
+    <div id="table-info">
+        <table>
+            <tbody>
+<!--            <tr>-->
+<!--                <th>content</th>-->
+<!--            </tr>-->
+            <tr data-th-each="comment : ${comments}">
+                <td class="item" data-th-utext="${comment.content}" data-th-id="'topic-comment' + ${comment.id}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-th-text="${info} == null ? '竞赛' : ${info.name}"></title>
+    <link rel="stylesheet" data-th-href="@{/content/comp-index.css}">
+    <link rel="stylesheet" data-th-href="@{/content/author-box.css}">
+    <link rel="stylesheet" data-th-href="@{/content/topic-index.css}">
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+    <style>
+        span {
+            display: block;
+        }
+    </style>
+</head>
+<body onload="init()">
+<div id="comp-info-box" data-th-object="${info}">
+    <ul>
+        <li class="info-title">
+            <span>主办方</span>
+        </li>
+        <li class="info-content">
+            <span data-th-each="org : ${info.organizer.split(' ')}" data-th-text="${org}"></span>
+        </li>
+        <li class="info-title">
+            <span>协办方</span>
+        </li>
+        <li class="info-content">
+            <span data-th-each="org : ${info.coOrganizer.split(' ')}" data-th-text="${org}"></span>
+        </li>
+        <li class="info-title">
+            <span>报名开始时间</span>
+        </li>
+        <li class="info-content">
+            <span data-th-text="*{enrollStartTime}" data-th-title="*{enrollStartTime}"></span>
+        </li>
+        <li class="info-title">
+            <span>报名结束时间</span>
+        </li>
+        <li class="info-content">
+            <span data-th-text="*{enrollEndTime}" data-th-title="*{enrollEndTime}"></span>
+        </li>
+        <li class="info-title">
+            <span>赛事开始时间</span>
+        </li>
+        <li class="info-content">
+            <span data-th-text="*{actStartTime}" data-th-title="*{actStartTime}"></span>
+        </li>
+        <li class="info-title">
+            <span>赛事结束时间</span>
+        </li>
+        <li class="info-content">
+            <span data-th-text="*{actEndTime}"></span>
+        </li>
+        <li class="info-title">
+            <span>联系方式</span>
+        </li>
+        <li class="info-content">
+            <span data-th-text="*{contact}"></span>
+        </li>
+        <li class="info-title">
+            <span>最大报名人数</span>
+        </li>
+        <li class="info-content">
+            <span data-th-text="*{maxEnrollCount}"></span>
+        </li>
+    </ul>
+</div>
+<div id="main" style="background-color: wheat">
+    <div id="title">
+        <span style="color: #244d4d;" data-th-text="${info.name}"></span>
+        <div id="publish-date-box">
+            <span data-th-text="${info.publishTime}"></span>
+        </div>
+    </div>
+    <div id="content">
+        <span data-th-utext="${info.content}"></span>
+    </div>
+</div>
+<script data-th-src="@{/jquery.js}"></script>
+<script>
+    // 初始化函数
+    function init() {
+    }
+</script>
+</body>
+</html>

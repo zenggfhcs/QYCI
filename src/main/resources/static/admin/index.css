@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #244d4d;
+}
+
+ul {
+    list-style-type: none;
+}
+
+label {
+    user-select: none;
+}
+
+#left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    padding: 0 0.5vw;
+    height: 100vh;
+    background-color: #506d6d;
+    transition: all 0.5s;
+}
+
+#left:hover {
+    width: 12vw;
+}
+
+#left-main {
+    width: 0;
+    transition: all 0.5s;
+}
+
+#left:hover #left-main {
+    width: 12vw;
+}
+
+#admin-avatar {
+
+    padding: 0 0.5vw;
+
+    margin: 2rem 0 0;
+
+    text-align: center;
+}
+
+#admin-avatar img {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+}
+
+#operate-box {
+
+    text-align: center;
+
+    margin: 1rem 0;
+}
+
+#operate-box ul {
+    list-style-type: none;
+    margin: 0 0 .5rem 0;
+    padding: 0 0.5vw;
+}
+
+#operate-box li {
+    line-height: 3rem;
+    margin: 0;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.operate-item + label {
+    width: 100%;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #244d4d;
+    padding: .5rem 0;
+    transition: all 0.3s;
+}
+
+.operate-item:checked + label {
+    border-radius: 2rem;
+    color: white;
+    background: #244d4d;
+}
+
+
+.operate-item:checked + label + .type-box {
+    height: 9.5rem;
+    background-color: #244d4d;
+}
+
+
+#main-iframe {
+    width: 100vw;
+    height: 100vh;
+    background-color: #244d4d;
+    overflow: hidden;
+    border: 0;
+    margin: 0;
+    display: flex;
+}

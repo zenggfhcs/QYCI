@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 注冊屬性文件 -->
+    <properties resource="jdbc.properties"/>
+
+    <!-- 设置类别名 -->
+    <typeAliases>
+    </typeAliases>
+
+    <!-- 配置环境,默认环境id为development -->
+    <environments default="mysql">
+        <environment id="mysql">
+            <!-- 配置事务管理类型为 JDBC -->
+            <transactionManager type="JDBC"/>
+            <!-- 配置数据源类型为连接池 -->
+            <dataSource type="POOLED">
+                <!-- 分别配置数据库连接的驱动,url,用户名,密码 -->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 配置映射文件的位置,可以有多个映射文件 -->
+    <mappers>
+        <mapper resource="com/qyci/dao/CompetitionDao.xml" />
+        <mapper resource="com/qyci/dao/CompTagDao.xml" />
+        <mapper resource="com/qyci/dao/CompTagsInfoDao.xml" />
+        <mapper resource="com/qyci/dao/CompTeachCommentDao.xml" />
+        <mapper resource="com/qyci/dao/CompTeachDao.xml" />
+        <mapper resource="com/qyci/dao/CompTeachTagDao.xml" />
+        <mapper resource="com/qyci/dao/CompTeachTagsInfoDao.xml" />
+        <mapper resource="com/qyci/dao/LoginStateDao.xml" />
+        <mapper resource="com/qyci/dao/TopicsCommentDao.xml" />
+        <mapper resource="com/qyci/dao/TopicsDao.xml" />
+        <mapper resource="com/qyci/dao/TopicsTagDao.xml" />
+        <mapper resource="com/qyci/dao/TopicsTagsInfoDao.xml" />
+        <mapper resource="com/qyci/dao/UserDao.xml" />
+<!--        <package name="com.qyci.dao" />-->
+    </mappers>
+</configuration>

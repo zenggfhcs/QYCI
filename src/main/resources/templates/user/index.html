@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" data-th-href="@{/homePage.css}">
+    <link rel="stylesheet" data-th-href="@{/index.css}">
+    <link rel="stylesheet" data-th-href="@{/publish-enter.css}">
+    <title>启扬赛讯</title>
+    <link rel="icon" href="http://10.3.109.11/main-icon.png" sizes="16x16">
+    <style>
+        #home-page {
+            border-bottom-width: 3px;
+            border-bottom-color: khaki;
+            border-style: solid;
+            padding-bottom: 3px;
+        }
+    </style>
+
+    <!-- 图片 -->
+    <script data-th-src="@{/editor/image.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/image.min.css}" href=""/>
+
+    <!-- 表情 -->
+    <script data-th-src="@{/editor/emoticons.min.js}"></script>
+    <link rel="stylesheet" data-th-href="@{/editor/emoticons.min.css}" href=""/>
+
+    <script data-th-src="@{/jquery.js}"></script>
+</head>
+<body onload="init()">
+<div id="main">
+    <div id="top-tools">
+        <div id="top-tools-content">
+            <!-- left -->
+            <div id="head-logo">
+                <a data-th-href="@{~/user/index}">
+                    <img id="head-logo-img" src="http://10.3.109.11/logo.png" alt="启扬赛讯">
+                </a>
+            </div>
+            <div id="head-link-box">
+                <ul>
+                    <li id="home-page" class="head-link-item">
+                        <a data-th-href="@{/user/index}" data-th-text="首页"></a>
+                    </li>
+                    <li id="vs-teaching-page" class="head-link-item">
+                        <a data-th-href="@{/user/vs-teach}" data-th-text="竞赛教学"></a>
+                    </li>
+                    <li id="vs-page" class="head-link-item">
+                        <a data-th-href="@{/user/vs}" data-th-text="竞赛资讯"></a>
+                    </li>
+                    <li id="com-page" class="head-link-item">
+                        <a data-th-href="@{/user/community}" data-th-text="社区"></a>
+                    </li>
+                </ul>
+            </div>
+            <div data-th-style="${user} != null ? 'display: none' : 'display: block'">
+                <div class="reg-login-box"><a data-th-href="@{~/login/index}" target="_blank">登录</a></div>
+                <div class="reg-login-box">&nbsp;|&nbsp;</div>
+                <div class="reg-login-box"><a data-th-href="@{~/login/register}" target="_blank">注册</a></div>
+            </div>
+            <div data-th-style="${user} == null ? 'display: none' : 'display: block'">
+                <th:block th:if="${user} != null">
+                    <img id="user-h-image" data-th-src="${user.getHeadImage()}"
+                         data-th-alt="${user.getName()}" onclick="window.open('/user/info', '_blank')" src="" alt=""/>
+                </th:block>
+            </div>
+
+            <div id="publish-box">
+                <div class="publish-item">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/publish-default.png" alt="" class="item-default"/>
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/publish-selected.png" alt="" class="item-selected"/>
+                    </div>
+                    <div class="publish-type-name">
+                        <p>发布</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(0)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/video-default.png" alt="" class="item-default"/>
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/video-selected.png" alt="" class="item-selected"/>
+                    </div>
+                    <div class="publish-type-name">
+                        <p>教学</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(1)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/vs-default.png" alt="" class="item-default"/>
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/vs-selected.png" alt="" class="item-selected"/>
+                    </div>
+                    <div class="publish-type-name">
+                        <p>竞赛</p>
+                    </div>
+                </div>
+                <div class="publish-item" onclick="publish(2)">
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/article-default.png" alt="" class="item-default"/>
+                    </div>
+                    <div class="img-box">
+                        <img src="http://10.3.109.11/index-top/article-selected.png" alt="" class="item-selected"/>
+                    </div>
+                    <div class="publish-type-name">
+                        <p>话题</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div style="width: 1vw; height: 1vh; float: right"></div>
+    </div>
+</div>
+<div style="height: 9vh"></div>
+
+<div class="main-box">
+    <!-- 竞赛教学 -->
+    <div class="contest-box">
+        <!-- 顶部 竞赛教学 -->
+        <div class="top">
+            <!-- 100系 -->
+            <h3>热门教学</h3>
+            <a class="more" data-th-href="@{/user/vs-teach}" href="">查看更多 ></a>
+        </div>
+        <!-- 竞赛教学内容 -->
+        <div class="container">
+            <a data-th-each="teach : ${teaches}" target="_blank"
+               data-th-href="@{'/user/vs/vs-content/' + ${teach.getId()}}" class="contest">
+                <!-- 竞赛教学图片 -->
+                <img data-th-src="${teach.getCover()}" alt="" src="">
+                <!-- 竞赛教学名字 -->
+                <div class="title">
+                    <span data-th-text="${teach.getTitle()}"></span>
+                </div>
+                <!-- 竞赛教学主办方 -->
+                <div class="sponsor">
+                    <span data-th-text="${teach.getFrom().getName()}"></span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- 竞赛 -->
+    <div class="contest-box">
+        <!-- 顶部 竞赛 -->
+        <div class="top">
+            <!-- 100系 -->
+            <h3>热门竞赛</h3>
+            <a class="more" data-th-href="@{/user/vs}" href="">查看更多 ></a>
+        </div>
+        <!-- 竞赛内容 -->
+        <div id="vs-content">
+            <ul class="vs-list">
+                <li data-th-each="comp : ${competitions}">
+                    <div class="vs-item">
+                        <div class="vs-info">
+                            <div class="vs-title">
+                                <span data-th-text="${comp.name}"></span>
+                            </div>
+                            <div>
+                                <div style="float: left">
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td class="vs-info-name">主办方</td>
+                                            <td class="vs-info-content" data-th-text="${comp.organizer}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vs-info-name">报名时间</td>
+                                            <td class="vs-info-content"
+                                                data-th-text="${comp.enrollStartTime} + '~' + ${comp.enrollEndTime}"></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td class="vs-info-name">比赛时间</td>
+                                            <td class="vs-info-content"
+                                                data-th-text="${comp.actStartTime} + '~' + ${comp.actEndTime}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="vs-info-name">联系方式</td>
+                                            <td class="vs-info-content" data-th-text="${comp.contact}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="reg-box">
+                                    <a data-th-href="'/user/comp/comp-content/' + ${comp.id}" target="_blank">详情</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 活动 -->
+    <div class="activity-box">
+        <!-- 顶部 活动 -->
+        <div class="top">
+            <h3>热门话题</h3>
+            <a class="more" data-th-href="@{/user/community}" href="">查看更多 ></a>
+        </div>
+        <!-- 活动内容 -->
+        <div class="topic-content">
+            <ul class="activity-list">
+                <li data-th-each="topic : ${topics}">
+                    <a data-th-href="'/user/com/topic-content/' + ${topic.id}" target="_blank">
+                        <div style="display: flex;">
+                            <div class="topic-title">
+                                <span data-th-text="${topic.title}"></span>
+                            </div>
+                            <div class="topic-date">
+                                <span data-th-text="${topic.publishTime}"></span>
+                            </div>
+                        </div>
+
+                        <div class="topic-item-content">
+                            <div data-th-utext="${topic.content}"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script data-th-src="@{/jquery.js}"></script>
+<script data-th-src="@{/tool.js}"></script>
+<script type="text/javascript">
+
+    const pages = ['teach', 'comp', 'topic']
+
+    function publish(index) {
+        const bool = check_login()
+        if (bool) {
+            if (confirm('未登录，是否前去登录') === true) {
+                window.open('/login/index', '_blank')
+            }
+            return
+        }
+        const url = '/user/publish/' + pages[index]
+        window.open(url, '_blank')
+    }
+</script>
+<script>
+
+    function init() {
+    }
+</script>
+</body>
+</html>

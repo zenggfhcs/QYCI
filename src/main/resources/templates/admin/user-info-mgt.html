@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <link rel="stylesheet" data-th-href="@{/admin/right.css}">
+    <link rel="stylesheet" data-th-href="@{/admin/table.css}">
+    <style>
+        #menu {
+            width: 8rem;
+            padding: 0;
+            height: 0;
+            position: absolute;
+            background-color: #244d4d;
+            overflow: hidden;
+            transition: all .3s;
+        }
+
+        #menu button {
+            height: 1.5rem;
+            width: 8rem;
+            border: 0;
+            color: #244d4d;
+            text-align: center;
+            background-color: wheat;
+        }
+
+        #menu button:hover {
+            background-color: #244d4d;
+            color: wheat;
+        }
+
+    </style>
+</head>
+<body onload="init()">
+<div id="right" style="width: 50rem">
+    <div id="r-main">
+        <div id="content-box" style="height: 50rem">
+        </div>
+    </div>
+</div>
+<div id="menu">
+    <button id="reset_name()" onclick="reset_name()">reset name</button>
+    <button id="reset_pi()" onclick="reset_pi()">reset describe</button>
+    <button id="reset_headImage()" onclick="reset_headImage()">reset head-image</button>
+    <button id="update_role()" onclick="update_role()">set admin</button>
+</div>
+<script data-th-src="@{/tool.js}"></script>
+<script data-th-src="@{/jquery.js}"></script>
+<script type="text/javascript">
+    function init() {
+        select()
+    }
+
+    user = {
+        id: ''
+    }
+
+    function reset_name() {
+        console.log(user.id)
+        $.ajax({
+                url: "/admin/user-info/resetName",
+                type: "post",
+                data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                async: true,
+                // dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                success: res => {
+                    alert("成功修改" + res + "条")
+                    select()
+                },
+                error: err => {
+                    console.log('err', err)
+                }
+            },
+        )
+        // momo
+    }
+
+    function reset_pi() {
+        console.log(user.id)
+        $.ajax({
+                url: "/admin/user-info/resetPi",
+                type: "post",
+                data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                async: true,
+                // dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                success: res => {
+                    alert("成功修改" + res + "条")
+                    select()
+                },
+                error: err => {
+                    console.log('err', err)
+                }
+            },
+        )
+        // => ''
+    }
+
+    function reset_headImage() {
+        $.ajax({
+                url: "/admin/user-info/resetHeadImage",
+                type: "post",
+                data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                async: true,
+                // dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                success: res => {
+                    alert("成功修改" + res + "条")
+                    select()
+                },
+                error: err => {
+                    console.log('err', err)
+                }
+            },
+        )
+        //
+    }
+
+    function update_role() {
+        $.ajax({
+                url: "/admin/user-info/updateRole",
+                type: "post",
+                data: JSON.stringify(user), // 注意这里，传递对象给后台，这里必须将对象进行序列化
+                async: true,
+                // dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+                success: res => {
+                    alert("成功修改" + res + "条")
+                    select()
+                },
+                error: err => {
+                    console.log('err', err)
+                }
+            },
+        )
+
+        // role => 7
+    }
+
+    function select() {
+        $.ajax({
+            url: "/admin/user-info/info",
+            type: "GET",
+            data: '', // 注意这里，传递对象给后台，这里必须将对象进行序列化
+            async: true,
+            // dataType: 'json',
+            cache: false,
+            processData: false,
+            contentType: 'application/json', // 注意这里，传递对象给后台，这里必须是 application/json
+            success: res => {
+                $("#content-box").html(res)
+                let items = document.getElementsByClassName('item')
+                console.log(items)
+                for (let i = 0; i < items.length; i++) {
+                    items.item(i).addEventListener('contextmenu', (event) => {
+                        event.preventDefault()
+                        let menu = document.getElementById('menu'); //获取右键菜单
+                        menu.style.left = event.clientX + 'px'
+                        menu.style.top = event.clientY + 'px'
+                        menu.style.height = '6.25rem'
+
+                        console.log(event)
+                        user.id = items.item(i).id
+                        event.stopPropagation()
+                    })
+                }
+            },
+            error: err => {
+                console.log('err', err)
+            }
+        })
+
+    }
+
+</script>
+<script>
+
+    window.onclick = function (e) { //关闭右键菜单
+        document.getElementById('menu').style.height = '0'
+    }
+</script>
+</body>
+</html>

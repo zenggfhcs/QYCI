@@ -1,0 +1,186 @@
+body {
+    background: url("http://10.3.109.11/login-bg.jpg") no-repeat;
+    background-size: 100vw 100vh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: '等线', serif;
+
+}
+
+.back {
+    width: 100vw;
+    position: absolute;
+
+}
+
+.main-l {
+    height: 100vh;
+    width: 100vw;
+}
+
+.main-s {
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#mask-l {
+    height: 100vh;
+    width: 16vw;
+    /* background: red; */
+    margin: 0 auto;
+}
+
+#mask-s {
+    height: 54vh;
+    width: 16vw;
+    /* background: rgb(255, 0, 221); */
+    padding-top: 20vh;
+}
+
+#login-back {
+    height: 54vh;
+    width: 16vw;
+    background: rgb(255, 255, 255);
+    border-radius: 6px;
+    position: absolute;
+}
+
+#login-top {
+    height: 12vh;
+    width: 90%;
+    margin-top: -5vh;
+    margin-left: 5%;
+    position: relative;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    background: linear-gradient(60deg, #ec407a, #d81b60);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
+}
+
+#icon {
+    margin: 0 auto;
+    width: 10vw;
+    font-size: 2vh;
+    text-align: center;
+
+}
+
+#logo {
+    margin: 1vh 0;
+    width: 8vw;
+    height: 4vh;
+}
+
+.card-title {
+    color: white;
+    font-size: 3vh;
+    padding-top: 3vh;
+}
+
+#login-content {
+    padding-top: 2vh;
+    height: 34vh;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    display: inline-block;
+    /*position: absolute;*/
+    /* background: rgb(86, 122, 133); */
+}
+
+.input-group {
+    display: flex;
+    width: 100%;
+    height: 7vh;
+    margin: 1vh 0;
+}
+
+.input-icon {
+    width: 2vh;
+    height: 2vh;
+    margin: 1.5vh;
+}
+
+.icon {
+    width: 5vh;
+    height: 5vh;
+    float: left;
+}
+
+.input-content {
+    float: left;
+    height: 5vh;
+    position: relative;
+    /*width: 70%;*/
+    text-align: left;
+}
+
+.input-content input {
+    outline: none;
+    border: none;
+    width: 95%;
+    color: #000;
+    font-size: 2vh;
+    line-height: 3vh;
+    height: 3vh;
+    padding: 0.3vh 0 0 0;
+    margin: 1vh 0 0.7vh 0;
+    border-bottom: 1px solid red;
+    background: none;
+}
+
+.input-content label {
+    position: absolute;
+    top: 1vh;
+    left: 0;
+    color: #a59e9e;
+    font-size: 2vh;
+    /*这个属性的默认值是auto 默认是这个元素可以被点击
+    但是如果我们写了none  就是这个元素不能被点击，就好像它可见但是不能用
+    可望而不可及*/
+    pointer-events: none;
+    /*加个过度*/
+    transition: all 0.5s;
+}
+
+.input-content input:focus + label,
+.input-content input:valid + label {
+    font-size: 1.3vh;
+    top: 0;
+    color: #f66f6a;
+}
+
+/* 登录按钮 */
+.login-box {
+    margin-top: 2vh;
+}
+
+.submit {
+    background: rgb(0, 0, 0, 0.0);
+    color: #f66f6a;
+    width: 40%;
+    height: 5vh;
+    border: 0;
+    font-size: 2vh;
+    box-sizing: content-box;
+    border-radius: 5px;
+}
+
+.submit:hover {
+    background: rgb(246, 111, 106, 0.68);
+    color: white;
+}
+
+.other-choose {
+    width: 100%;
+    margin: 0;
+}
+
+.choose {
+    text-decoration: none;
+    color: #ffadc8;
+}

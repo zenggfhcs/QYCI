@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qyci.dao.CompTeachDao">
+    <resultMap id="BaseResultMap" type="com.qyci.entity.CompTeach">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="cover" jdbcType="VARCHAR" property="cover"/>
+        <result column="link" jdbcType="VARCHAR" property="link"/>
+        <result column="synopsis" jdbcType="VARCHAR" property="synopsis"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="collect_count" jdbcType="INTEGER" property="collectCount"/>
+        <result column="topping" jdbcType="TINYINT" property="topping"/>
+        <result column="visible" jdbcType="BIT" property="visible"/>
+        <result column="review" jdbcType="BIT" property="review"/>
+        <result column="review_result" jdbcType="BIT" property="reviewResult"/>
+        <association property="from" javaType="com.qyci.entity.User" select="selectUserByKey" column="from">
+        </association>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.qyci.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="role" jdbcType="TINYINT" property="role" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="OTHER" property="sex" />
+        <result column="age" jdbcType="TINYINT" property="age" />
+        <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+        <result column="birthday" jdbcType="DATE" property="birthday" />
+        <result column="personal_introduction" jdbcType="VARCHAR" property="personalIntroduction" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, cover, link, synopsis, publish_time, like_count, collect_count, `from`, `topping`, `visible`, `review`, `review_result`
+    </sql>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.qyci.entity.CompTeach" useGeneratedKeys="true">
+        insert into comp_teach(`from`, title, cover, link, synopsis, publish_time, like_count, collect_count, visible, topping, review, review_result)
+        values (#{from.id}, #{title}, #{cover}, #{link}, #{synopsis}, now(), 0, 0, 1, 0, 0, 0)
+    </insert>
+    <update id="updateByState">
+        update comp_teach
+            <set>
+                <if test="review == true">
+                    review = 1,
+                </if>
+                <if test="review == false">
+                    review = 0,
+                </if>
+                <if test="reviewResult == true">
+                    review_result = 1,
+                </if>
+                <if test="reviewResult == false">
+                    review_result = 0,
+                </if>
+            </set>
+        where id = #{id}
+    </update>
+    <update id="disVisitById">
+        update comp_teach
+        set visible = 0
+        where id = #{id}
+    </update>
+    <select id="selectUserByKey" resultMap="UserResultMap">
+        select
+            `id`, `password`, `role`, email, `name`, `sex`, `age`, `head_image`, `birthday`, `personal_introduction`
+        from user
+        where id = #{key}
+    </select>
+    <!--  查找几个  -->
+    <select id="selectFirst" resultMap="BaseResultMap">
+        select comp_teach.id,
+               `title`,
+               `cover`,
+               `link`,
+               `synopsis`,
+               `publish_time`,
+               `like_count`,
+               `collect_count`,
+               `from`,
+               `topping`,
+               `visible`
+        from comp_teach
+        where visible = 1
+          and review = 1
+          and review_result = 1
+        order by topping desc
+        limit 4
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select *
+        from comp_teach,
+             user
+        where comp_teach.id = #{key}
+          and user.id = `from`
+          and visible = 1
+    </select>
+    <select id="selectByKeys" resultMap="BaseResultMap">
+        select distinct comp_teach.id,
+        `title`,
+        `cover`,
+        `link`,
+        `synopsis`,
+        `publish_time`,
+        `like_count`,
+        `collect_count`,
+        `from`,
+        `topping`,
+        `visible`
+        from comp_teach
+        where visible = 1
+        and review = 1
+        and review_result = 1
+
+        <if test="ids.size() > 0">
+            and comp_teach.id in
+            <foreach collection="list" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="ids.size() == 0">
+            and visible = 0
+        </if>
+    </select>
+    <select id="selectByTeach" resultMap="BaseResultMap">
+        select *
+        from
+            comp_teach
+        where visible = 1
+        and review = 1
+        and review_result = 1
+        and `from` = #{from.id}
+        <if test="review == true">
+            and review = 1
+        </if>
+        <if test="review == false">
+            and review = 0
+        </if>
+        <if test="reviewResult == true">
+            and review_result = 1
+        </if>
+        <if test="reviewResult == false">
+            and review_result = 0
+        </if>
+    </select>
+    <select id="selectAllByTeach" resultMap="BaseResultMap">
+        select *
+        from comp_teach
+        where visible = 1
+          and review = 0
+          and review_result = 0
+    </select>
+    <select id="mgt_selectAll" resultMap="BaseResultMap">
+        select *
+        from comp_teach
+        where visible = 1
+    </select>
+</mapper>
