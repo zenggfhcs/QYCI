@@ -35,8 +35,6 @@ public class SendController {
         return JSON.toJSONString(1);
     }
 
-    public ResponseResult
-
     @ResponseBody
     @PostMapping("/comment_upload_file")
     public Object commentUpload(@RequestParam(value = "file") MultipartFile file) throws IOException {
